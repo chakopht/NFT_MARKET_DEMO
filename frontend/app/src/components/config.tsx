@@ -17,12 +17,13 @@ import { http, createConfig } from '@wagmi/core';
 export const rainbowConfig = getDefaultConfig({
   appName: "smily's market",
   projectId: '0dec3958e29dd1710960e112dbf664b5',
-  chains: [hardhat],
+  chains: [sepolia],
   ssr: false,
 });
 
-// graphql node
-export const graphNode = "http://127.0.0.1:8000/subgraphs/name/example/"
+// test graphql node
+// export const graphNode = "http://127.0.0.1:8000/subgraphs/name/example/"
+export const graphNode = "https://api.studio.thegraph.com/query/109366/smiley/version/latest"
 
 // test contract addr
 // export const collectionsAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'

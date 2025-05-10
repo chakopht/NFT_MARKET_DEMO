@@ -134,6 +134,9 @@ export default function MintAction () {
           })
 
           const approve_hash = await writeContract(rainbowConfig, approve_res.request);
+          const approve_receipt = await waitForTransactionReceipt(rainbowConfig, {
+            hash: approve_hash
+          });
 
           const parse_price = parseUnits(price, 18);
     
@@ -160,6 +163,7 @@ export default function MintAction () {
 
         console.log(packLogs)
       } catch (error) {
+        console.log(error)
         console.log('Mint Failure !')
       }
     } else {

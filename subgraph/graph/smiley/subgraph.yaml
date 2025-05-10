@@ -1,0 +1,32 @@
+specVersion: 1.3.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: MarketPlace
+    network: sepolia
+    source:
+      address: "0xB0064A2490B43db22f4d67087Ade820b374b5624"
+      abi: MarketPlace
+      startBlock: 8290223
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Packed
+        - Purchased
+        - Unpacked
+      abis:
+        - name: MarketPlace
+          file: ./abis/MarketPlace.json
+      eventHandlers:
+        - event: Packed(indexed address,indexed uint256,address,uint256,uint256)
+          handler: handlePacked
+        - event: Purchased(indexed address,indexed uint256,address,uint256)
+          handler: handlePurchased
+        - event: Unpacked(indexed address,indexed uint256)
+          handler: handleUnpacked
+      file: ./src/market-place.ts
