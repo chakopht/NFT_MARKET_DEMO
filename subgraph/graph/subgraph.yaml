@@ -1,0 +1,30 @@
+specVersion: 0.0.4
+description: NFT market
+# repository: https://github.com/<YOUR_GITHUB_NAME>/erc721-example
+schema:
+  file: ./schema.graphql
+dataSources:
+- kind: ethereum/contract
+  name: MarketPlaceContract
+  network: sepolia
+  source:
+    address: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"
+    abi: MarketPlace
+    startBlock: 0
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.9
+    language: wasm/assemblyscript
+    entities:
+    - Pack
+    abis:
+    - name: MarketPlace
+      file: ./marketplace.json
+    eventHandlers:
+    - event: Packed(indexed address,indexed uint256,address,uint256,uint256)
+      handler: handlePacked
+    - event: Purchased(indexed address,indexed uint256,address,uint256)
+      handler: handlePurchased
+    - event: Unpacked(indexed address,indexed uint256)
+      handler: handleUnpacked
+    file: ./mapping.ts

@@ -1,0 +1,8 @@
+type Pack @entity(immutable: false) {
+  id: ID! # tokenid
+  seller: Bytes!
+  price: BigInt!
+  nft: Bytes!
+  flag: BigInt!
+  status: BigInt!
+}
