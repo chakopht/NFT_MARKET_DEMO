@@ -7,6 +7,7 @@ import { gql, GraphQLClient } from "graphql-request"
 import { readContract } from "@wagmi/core";
 import { erc721Abi } from "viem";
 import { rainbowConfig, graphNode } from "@/components/config";
+import { PacksQueryResponse } from "@/components/itemGrid";
 
 const graphQLClient = new GraphQLClient(graphNode);
 
@@ -45,7 +46,7 @@ export default function Home() {
     // request Pack enetity
     console.log(`items length: ${items.length}`);
     try {
-      const req: any = await graphQLClient.request(
+      const req = await graphQLClient.request<PacksQueryResponse>(
         doc, {
           first: perPage,
           skip: skip,

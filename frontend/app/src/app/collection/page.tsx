@@ -8,19 +8,10 @@ import { readContract } from "@wagmi/core";
 import { erc721Abi } from "viem";
 import { rainbowConfig, graphNode } from "@/components/config";
 import { getAccount } from "@wagmi/core";
+import { PacksQueryResponse } from "@/components/itemGrid";
 
 
 const graphQLClient = new GraphQLClient(graphNode);
-
-interface PacksQueryResponse {
-  packs: {
-    id: string;
-    seller: `0x${string}`;
-    price: bigint;
-    nft: `0x${string}`;
-    uri: string;
-  }[];
-}
 
 
 export default function Home() {

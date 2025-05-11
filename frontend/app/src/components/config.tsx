@@ -3,16 +3,9 @@ import {
   getDefaultConfig
 } from '@rainbow-me/rainbowkit';
 import {
-  hardhat,
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
   sepolia
 } from 'wagmi/chains';
 
-import { http, createConfig } from '@wagmi/core';
 
 export const rainbowConfig = getDefaultConfig({
   appName: "smily's market",

@@ -3,7 +3,7 @@
 import "./globals.css";
 import React from 'react';
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import Breadcrumb from "@/components/bread-crumb"
 import AccountStatus from "@/components/account"
@@ -12,14 +12,12 @@ import { ConnectButton, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 
 import { rainbowConfig } from "@/components/config";
-import { WagmiProvider, useAccount } from "wagmi";
+import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 

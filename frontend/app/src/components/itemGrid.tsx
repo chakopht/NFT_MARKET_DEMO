@@ -26,6 +26,16 @@ export type MarketItem = {
   uri: string;
 };
 
+export interface PacksQueryResponse {
+  packs: {
+    id: string;
+    seller: `0x${string}`;
+    price: bigint;
+    nft: `0x${string}`;
+    uri: string;
+  }[];
+}
+
 interface ItemGridProps {
   items: MarketItem[];
   reFetchItems: () => void;
@@ -68,7 +78,7 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
                 connector: account.connector
               })
     
-              const buy_hash = await writeContract(rainbowConfig, res.request);
+              await writeContract(rainbowConfig, res.request);
 
               // approve the item
               const approve_res = await simulateContract(rainbowConfig, {
@@ -83,7 +93,7 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
               })
               
               const approve_hash = await writeContract(rainbowConfig, approve_res.request);
-              const approve_receipt = await waitForTransactionReceipt(rainbowConfig, {
+              await waitForTransactionReceipt(rainbowConfig, {
                 hash: approve_hash
               });
 
@@ -121,7 +131,7 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
           connector: account.connector
         })
   
-        const unpack_hash = await writeContract(rainbowConfig, res.request);
+        await writeContract(rainbowConfig, res.request);
         // reFetch the items
         setTimeout(async() => {await reFetchItems(); setLoading(false);}, 1500);
       } catch (error) {
@@ -136,7 +146,7 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
     <div className="h-[calc(100vh+10px)]">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {items.map((item) => (
-            <Dialog>
+            <Dialog key={item.id}>
               <DialogTrigger asChild>
                 <Card key={item.id} className="transition hover:shadow-2xl w-55 h-60 pt-0 pb-3 mb-3 gap-0">
                   <CardHeader className="relative w-full h-50 overflow-hidden">

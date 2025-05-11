@@ -13,7 +13,7 @@ import { Loader2 } from "lucide-react";
 import { useState, ChangeEvent } from 'react';
 import axios from 'axios';
 import { marketplaceABI, collectionABI } from "@/components/config";
-import { writeContract, getAccount, simulateContract, waitForTransactionReceipt, readContract } from '@wagmi/core'
+import { writeContract, getAccount, simulateContract, waitForTransactionReceipt } from '@wagmi/core'
 
 import { collectionsAddress, marketplaceAddress, rainbowConfig } from "@/components/config";
 import { parseEventLogs, parseUnits } from "viem";
@@ -82,7 +82,7 @@ export default function MintAction () {
 
       setIpfsCid(response.data.data.cid); // Save the IPFS hash
     } catch (error) {
-      console.error('Error uploading to Pinata');
+      console.error('Error uploading to Pinata', error);
     } finally {
       setLoading(false);
     }
@@ -132,7 +132,7 @@ export default function MintAction () {
           })
 
           const approve_hash = await writeContract(rainbowConfig, approve_res.request);
-          const approve_receipt = await waitForTransactionReceipt(rainbowConfig, {
+          await waitForTransactionReceipt(rainbowConfig, {
             hash: approve_hash
           });
 
@@ -161,7 +161,7 @@ export default function MintAction () {
 
         console.log(packLogs)
       } catch (error) {
-        console.log('Mint Failure !')
+        console.log('Mint Failure :', error)
       }
     } else {
       if (!account.isConnected){

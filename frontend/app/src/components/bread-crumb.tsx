@@ -5,7 +5,6 @@ import {
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
-    BreadcrumbPage,
     BreadcrumbSeparator,
   } from "@/components/ui/breadcrumb"
 
@@ -41,7 +40,7 @@ import {
         <BreadcrumbItem>
             <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
-        {breadcrumbs.map((breadcrumb, index) => (
+        {breadcrumbs.map((breadcrumb) => (
           <>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
