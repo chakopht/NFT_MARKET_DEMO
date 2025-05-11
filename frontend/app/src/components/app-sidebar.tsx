@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
@@ -12,7 +11,7 @@ import {
     SidebarMenuItem
   } from "@/components/ui/sidebar"
 
-  import { Calendar, Home, Inbox, Settings } from "lucide-react"
+  import { Home, Inbox, Settings } from "lucide-react"
 
   import { useAccount } from "wagmi";
 

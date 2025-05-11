@@ -7,9 +7,6 @@ import { gql, GraphQLClient } from "graphql-request"
 import { readContract } from "@wagmi/core";
 import { erc721Abi } from "viem";
 import { rainbowConfig, graphNode } from "@/components/config";
-import { getAccount } from "@wagmi/core";
-import { useAccount } from "wagmi";
-
 
 const graphQLClient = new GraphQLClient(graphNode);
 

@@ -12,6 +12,16 @@ import { getAccount } from "@wagmi/core";
 
 const graphQLClient = new GraphQLClient(graphNode);
 
+interface PacksQueryResponse {
+  packs: {
+    id: string;
+    seller: `0x${string}`;
+    price: bigint;
+    nft: `0x${string}`;
+    uri: string;
+  }[];
+}
+
 
 export default function Home() {
   //to make sure useEffect wont be called twice
@@ -49,7 +59,7 @@ export default function Home() {
     // request Pack enetity
     console.log(`items length: ${items.length}`);
     try {
-      const req: any = await graphQLClient.request(
+      const req = await graphQLClient.request<PacksQueryResponse>(
         doc, {
           first: perPage,
           skip: skip,

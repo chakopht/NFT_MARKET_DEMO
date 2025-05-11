@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import { formatEther, parseEther, parseEventLogs, slice } from "viem";
+import { formatEther, parseEther } from "viem";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { rainbowConfig, marketplaceABI, marketplaceAddress, collectionABI, collectionsAddress } from "./config";
 import { writeContract, getAccount, simulateContract, waitForTransactionReceipt } from "@wagmi/core";
-import { skaleEuropa } from "viem/chains";
 
 export type MarketItem = {
   id: string;
