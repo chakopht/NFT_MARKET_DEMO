@@ -84,7 +84,9 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
               })
               
               const approve_hash = await writeContract(rainbowConfig, approve_res.request);
-              console.log(`approve_hash: ${approve_hash}`)
+              const approve_receipt = await waitForTransactionReceipt(rainbowConfig, {
+                hash: approve_hash
+              });
 
               // reFetch the items
               await reFetchItems();

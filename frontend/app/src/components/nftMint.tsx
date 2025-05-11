@@ -84,7 +84,7 @@ export default function MintAction () {
 
       setIpfsCid(response.data.data.cid); // Save the IPFS hash
     } catch (error) {
-      console.error('Error uploading to Pinata:', error);
+      console.error('Error uploading to Pinata');
     } finally {
       setLoading(false);
     }
@@ -163,7 +163,6 @@ export default function MintAction () {
 
         console.log(packLogs)
       } catch (error) {
-        console.log(error)
         console.log('Mint Failure !')
       }
     } else {
