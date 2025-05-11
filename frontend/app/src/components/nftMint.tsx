@@ -16,7 +16,12 @@ import { marketplaceABI, collectionABI } from "@/components/config";
 import { writeContract, getAccount, simulateContract, waitForTransactionReceipt } from '@wagmi/core'
 
 import { collectionsAddress, marketplaceAddress, rainbowConfig } from "@/components/config";
-import { parseEventLogs, parseUnits } from "viem";
+import { Log, parseEventLogs, parseUnits } from "viem";
+
+type EventArgs = {
+  _tokenId: bigint
+}
+
 
 export default function MintAction () {
   // State variables for handling file, IPFS hash, and loading state
@@ -116,8 +121,8 @@ export default function MintAction () {
             abi: collectionABI,
             logs: mint_receipt.logs
           })
-
-          const tokenId = eventLogs[1].args._tokenId;
+          const eventLog = eventLogs[1] as Log & { args:EventArgs }
+          const tokenId = eventLog.args._tokenId;
 
           // take a pack
           const approve_res = await simulateContract(rainbowConfig, {
