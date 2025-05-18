@@ -1,9 +1,14 @@
 pragma solidity ^0.8.28;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 
-contract Marketplace is ReentrancyGuard {
+
+
+contract Marketplace is ReentrancyGuardUpgradeable, UUPSUpgradeable, OwnableUpgradeable {
     struct Pack {
         address seller;
         uint256 price;
@@ -19,6 +24,16 @@ contract Marketplace is ReentrancyGuard {
     event Purchased(address indexed nft, uint256 indexed tokenId, address buyer, uint256 price);
     event Unpacked(address indexed nft, uint256 indexed tokenId);
 
+    function init(address initialOwner) public initializer{
+        __ReentrancyGuard_init();
+        __UUPSUpgradeable_init();
+        __Ownable_init(initialOwner);
+        
+    }
+
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner{
+
+    }
 
     function takePack(address nft, uint256 tokenId, uint256 price) external {
         require(price > 0, "Price must be > 0");
