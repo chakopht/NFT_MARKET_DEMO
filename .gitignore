@@ -19,3 +19,5 @@ ignition/deployments/chain-31337
 # Local Graph Node Docker
 /subgraph/graph-node
 /subgraph/graph/build
+
+.history
