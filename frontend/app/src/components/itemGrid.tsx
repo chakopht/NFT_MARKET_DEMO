@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import { formatEther, parseEther } from "viem";
+import { formatEther, parseEther, parseUnits } from "viem";
 import {
   Dialog,
   DialogContent,
@@ -14,9 +14,11 @@ import {
 import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { rainbowConfig, marketplaceABI, marketplaceAddress, collectionABI, collectionsAddress } from "./config";
 import { writeContract, getAccount, simulateContract, waitForTransactionReceipt } from "@wagmi/core";
+import { Input } from "./ui/input";
+import { Switch } from "./ui/switch";
 
 export type MarketItem = {
   id: string;
@@ -24,6 +26,9 @@ export type MarketItem = {
   price: bigint;
   nft: `0x${string}`;
   uri: string;
+  tokenId: string;
+  lock: bigint;
+  flag: bigint;
 };
 
 export interface PacksQueryResponse {
@@ -33,6 +38,9 @@ export interface PacksQueryResponse {
     price: bigint;
     nft: `0x${string}`;
     uri: string;
+    tokenId: string;
+    lock: bigint;
+    flag: bigint;
   }[];
 }
 
@@ -45,13 +53,18 @@ interface ItemGridProps {
 
 export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridProps) {
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [inputFlag, setInputFlag] = useState<boolean>(false);
+  const [price, setPrice] = useState<string | null>(null);
+  const [priceErr, setPriceErr] = useState<string | null>(null);
+  const [listed, setListed] = useState<bigint | null>(null);
   // to change the items info independently
 
   const checkAccount = (seller: `0x${string}`, flag: boolean=true) => {
+    // flag is true: market mode
+    // flag is false: collection mode
     const account = getAccount(rainbowConfig);
-    console.log(`seller: ${seller}  address: ${account.address?.toLowerCase()}`)
-    const pattern = flag ? seller == account.address?.toLowerCase() : seller != account.address?.toLowerCase()
+    const pattern = flag ? seller.toLowerCase() == account.address?.toLowerCase() : seller.toLowerCase() != account.address?.toLowerCase();
     if (pattern || !account.isConnected) {
       // disable button
       return true;
@@ -59,6 +72,40 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
       return false;
     }
   }
+
+  const handleDialog = (open: boolean, flag: bigint) => {
+    // capture dialog window status
+    // disable input after open dialog
+    if (open){
+      console.log(flag);
+      setInputFlag(open);
+      setPrice(null);
+      setListed(flag);
+    }
+  }
+
+  const handleFlag = (flag: boolean) => {
+    // capture Listed switch
+    if (flag) {
+      setListed(BigInt('1'));
+    } else {
+      setListed(BigInt('0'));
+    }
+  }
+
+  const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
+    // capture the price change
+      const price = event.target.value;
+      if (price) {
+        if (parseFloat(price) > 0) {
+          setPriceErr(null);
+          setPrice(price);
+        }else{
+          setPriceErr('price must greater than 0 ETH');
+          setPrice(null);
+        }
+      }
+    };
 
   async function buyNFT(nft: `0x${string}`, tokenId: bigint, price: string) {
     // buying a nft
@@ -138,70 +185,193 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
         console.log(`UnPack Failure ${error} !`);
         setLoading(false);
       }
+    }  
+  }
+
+  const cancelParam = (oldFlag: bigint) => {
+    console.log(oldFlag);
+    setListed(oldFlag);
+    setInputFlag(true);
+  }
+
+  async function saveParam(nft: `0x${string}`, tokenId: bigint, oldPrice: bigint, oldListed: bigint) {
+    setLoading(true);
+    let refetchFlag = false;
+    // one worked refetch
+    if (price){
+      // save price
+      const parse_price = parseUnits(price, 18);
+      if (parse_price != oldPrice){
+        refetchFlag =  refetchFlag || await savePrice(nft, tokenId, parse_price);
+      }
     }
-    
+
+    if (listed != null && listed != oldListed){
+      // save flag
+      refetchFlag = refetchFlag || await saveFlag(nft, tokenId, listed);
+    }
+
+    // refetch the items
+    if (refetchFlag) {reFetchItems();}
+
+    setLoading(false);
+    // setTimeout(async() => {await reFetchItems(); setLoading(false);}, 1500);
+    setInputFlag(true);
+  }
+
+  async function savePrice(nft: `0x${string}`, tokenId: bigint, price: bigint){
+    const account = getAccount(rainbowConfig);
+    if (account.isConnected) {
+      // change nft price
+      try {
+        const res = await simulateContract(rainbowConfig, {
+          abi: marketplaceABI,
+          address: marketplaceAddress,
+          functionName: 'setPrice',
+          args: [
+            nft, 
+            tokenId,
+            price
+          ],
+          connector: account.connector
+        })
+  
+        await writeContract(rainbowConfig, res.request);
+        return true;
+      } catch (error) {
+        console.log(`SetPrice Failure ${error} !`);
+        return false;
+      }
+    }
+    return false; 
+  }
+
+  async function saveFlag(nft: `0x${string}`, tokenId: bigint, flag: bigint){
+    const account = getAccount(rainbowConfig);
+    if (account.isConnected) {
+      // change nft price
+      try {
+        const res = await simulateContract(rainbowConfig, {
+          abi: marketplaceABI,
+          address: marketplaceAddress,
+          functionName: 'setFlag',
+          args: [
+            nft, 
+            tokenId,
+            flag
+          ],
+          connector: account.connector
+        })
+        await writeContract(rainbowConfig, res.request);
+        return true;
+      } catch (error) {
+        console.log(`SetFlag Failure ${error} !`);
+        return false;
+      }
+    }  
+    return false;
   }
 
   return (
     <div className="h-[calc(100vh+10px)]">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {items.map((item) => (
-            <Dialog key={item.id}>
+            <Dialog key={item.tokenId} onOpenChange={(open: boolean) => handleDialog(open, item.flag)}>
               <DialogTrigger asChild>
-                <Card key={item.id} className="transition hover:shadow-2xl w-55 h-60 pt-0 pb-3 mb-3 gap-0">
+                <Card key={item.tokenId} className="transition hover:shadow-2xl w-55 h-60 pt-0 pb-3 mb-3 gap-0">
                   <CardHeader className="relative w-full h-50 overflow-hidden">
                       <Image
                         src={item.uri}
-                        alt={item.id}
+                        alt={item.tokenId}
                         fill
                         className="rounded-t-xl object-cover"
                       />
                   </CardHeader>
                   <CardContent className="flex flex-row justify-center items-center gap-4">
-                  <CardTitle className="text-lg mt-3"># {item.id}</CardTitle>
+                  <CardTitle className="text-lg mt-3"># {item.tokenId}</CardTitle>
                     <div className="text-gray-500 mt-3">{formatEther(item.price)} ETH</div>
                   </CardContent>
                 </Card>
               </DialogTrigger>
               <DialogContent className="sm:max-w-180">
                 <DialogHeader>
-                  <DialogTitle>{flag ? ("Buying Token:") : ("Token:")} # {item.id}</DialogTitle>
+                  <DialogTitle>{flag ? ("Buying Token:") : ("Token:")} # {item.tokenId}</DialogTitle>
                   <DialogDescription>
                     Collections Address - {item.nft}
                   </DialogDescription>
                   </DialogHeader>
                     <div className="grid items-center w-full gap-5">
                       <div className="relative grid w-full h-50 items-center">
-                        <Image src={item.uri} alt={item.id} fill className="rounded-xl object-cover"/>
+                        <Image src={item.uri} alt={item.tokenId} fill className="rounded-xl object-cover"/>
                       </div>
-                      <div className="grid grid-rows-1 grid-cols-2 items-center w-70">
+                      <div className="grid grid-rows-1 grid-cols-3 items-center w-170">
                         <Label className="font-bold text-left">
                           {flag ? ("Seller") : ("Owner")}: 
                         </Label>
                         <Label className="text-cyan-400">{item.seller}</Label>
                       </div>
-                      <div className="grid grid-rows-1 grid-cols-2 items-center w-70">
+                      <div className="grid grid-rows-1 grid-cols-3 items-center w-170">
                         <Label className="font-bold text-left">
-                          Price
+                          Price:
                         </Label>
-                        <Label className="font-bold text-violet-800">
-                        {formatEther(item.price)} ETH
-                        </Label>
+                        { 
+                          flag || inputFlag ? (<Label className="font-bold text-violet-800">{formatEther(item.price)} ETH</Label>) : 
+                          (<Label className="font-bold text-violet-800 mr-5">
+                              <Input id="price" type="string" placeholder={formatEther(item.price)} className="mr-5" onChange={handlePriceChange} /> ETH
+                            </Label>
+                          )
+                        }
+                        {flag || inputFlag ? '': (priceErr ? (<Label className="text-red-400">{priceErr}</Label>) : price ? (<Label className="text-teal-400">Done!</Label>) : '')}
                       </div>
+                      {
+                        !flag ? (
+                          <div className="grid grid-rows-1 grid-cols-3 items-center w-170">
+                            <Label className="font-bold text-left">
+                              Listed:
+                            </Label>
+                            <Switch className="data-[state=checked]:bg-cyan-400" checked={Boolean(listed)} onCheckedChange={handleFlag} disabled={inputFlag ? true : false}/>
+                        </div>
+                        ) : ''
+                      }
                     </div>
                   <DialogFooter>
                     { flag ? (
-                      <Button className="mr-2.5" onClick={()=>buyNFT(item.nft, BigInt(item.id), formatEther(item.price))} 
+                      <Button className="mr-2.5" onClick={()=>buyNFT(item.nft, BigInt(item.tokenId), formatEther(item.price))} 
                     disabled={loading || checkAccount(item.seller)}>
                       {loading ? (<Loader2 className="animate-spin" />) : ''}
                       {loading ? 'Waiting...' : 'BUY IT !'}
                     </Button>
                   ) : (
-                    <Button className="mr-2.5" onClick={()=>unPack(item.nft, BigInt(item.id))} 
-                    disabled={loading || checkAccount(item.seller, false)}>
-                      {loading ? (<Loader2 className="animate-spin" />) : ''}
-                      {loading ? 'Waiting...' : 'REMOVE IT !'}
-                    </Button>
+                    <div>
+                      {/* <Button className="mr-2.5" onClick={()=>unPack(item.nft, BigInt(item.tokenId))} 
+                      disabled={loading || checkAccount(item.seller, false)}>
+                        {loading ? (<Loader2 className="animate-spin" />) : ''}
+                        {loading ? 'Waiting...' : 'UNLIST'}
+                      </Button> */}
+                      {
+                        inputFlag ? (<div>
+                          <Button className="mr-2.5 bg-slate-700 hover:bg-slate-600 font-bold" onClick={()=>setInputFlag(false)} disabled={loading || checkAccount(item.seller, false)}>
+                            Change
+                          </Button>
+                          <Button className="mr-2.5 font-bold" variant="destructive" onClick={()=>unPack(item.nft, BigInt(item.tokenId))} 
+                          disabled={loading || checkAccount(item.seller, false)}>
+                            {loading ? (<Loader2 className="animate-spin" />) : ''}
+                            {loading ? 'Waiting...' : 'REMOVE !'}
+                          </Button></div>
+                        ):
+                        (
+                          <div>
+                            <Button className="mr-2.5 bg-cyan-400 hover:bg-cyan-300 font-bold" onClick={()=>saveParam(item.nft, BigInt('1'), item.price, item.flag)} disabled={loading || checkAccount(item.seller, false)}>
+                              {loading ? (<Loader2 className="animate-spin" />) : ''}
+                              {loading ? 'Waiting...' : 'Save'}
+                            </Button>
+                            <Button className="mr-2.5 bg-slate-700 hover:bg-slate-600 font-bold" onClick={()=>cancelParam(item.flag)} disabled={loading || checkAccount(item.seller, false)}>
+                              Cancel
+                            </Button>
+                          </div>
+                        )
+                      }
+                    </div>
                   ) }
                   </DialogFooter>
               </DialogContent>

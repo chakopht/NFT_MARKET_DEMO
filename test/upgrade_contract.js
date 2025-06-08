@@ -30,6 +30,7 @@ describe("UpgradeMarketplace", function () {
   })
 
   it("second_deploy", async () => {
+    // deploy proxy
     const Market = await ethers.getContractFactory("Marketplace");
     proxy = await upgrades.deployProxy(Market, [deployer.address], {
         initializer: "init",
@@ -49,7 +50,7 @@ describe("UpgradeMarketplace", function () {
 
     // expect(await proxy.takeTest()).to.equal(1);
 
-
+    // upgrade proxy
     console.log(proxy.target)
     const MarketV2 = await ethers.getContractFactory("MarketplaceV2");
     const ImplV2 = await upgrades.upgradeProxy(proxy.target, MarketV2, {

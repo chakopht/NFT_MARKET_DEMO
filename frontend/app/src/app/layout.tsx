@@ -30,6 +30,7 @@ export default function RootLayout({
   
   return (
     <html lang="en">
+      <head><title>Smily Market</title></head>
       <body className="bg-cyan-50">
           <WagmiProvider config={rainbowConfig}>
             <QueryClientProvider client={queryClient}>

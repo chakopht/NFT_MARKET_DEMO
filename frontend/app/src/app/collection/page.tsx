@@ -16,8 +16,18 @@ const graphQLClient = new GraphQLClient(graphNode);
 
 export default function Home() {
   //to make sure useEffect wont be called twice
+  const test_item: MarketItem = {
+      id: "1",
+      seller: `0x120e6427A7bCC9Aa57c45facff03B83b9E983d47`,
+      price: BigInt(700000000000000),
+      nft: `0x001`,
+      uri: `https://${process.env.NEXT_PUBLIC_PINATA_GW}/ipfs/bafybeihhn4sy5eorydznoz2iv3v3lscjbyleqqjkkko7xoz2em4d6x65sq`,
+      tokenId: "test",
+      lock: BigInt(0),
+      flag: BigInt(1)
+  };
   const onceEffect = useRef(false);
-  const [items, setItems] = useState<MarketItem[]>([]);
+  const [items, setItems] = useState<MarketItem[]>([test_item]);
   const [loading, setLoading] = useState(false);
   const perPage = 12;
 
@@ -70,7 +80,7 @@ export default function Home() {
             address: newItems[i].nft,
             functionName: 'tokenURI',
             args: [
-              BigInt(newItems[i].id)
+              BigInt(newItems[i].tokenId)
             ]
           })
         }

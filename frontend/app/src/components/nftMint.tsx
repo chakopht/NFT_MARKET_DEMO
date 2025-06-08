@@ -184,15 +184,15 @@ export default function MintAction () {
 
   return (
     <div>
-      <CardHeader className="my-10">
-        <CardTitle className="text-2xl">Mint A New One !</CardTitle>
+      <CardHeader className="my-5">
+        <CardTitle className="text-4xl">Mint A New One !</CardTitle>
         <CardDescription>Create your own NFT.</CardDescription>
       </CardHeader>
       <CardContent>
       <Label htmlFor="upload" className="text-lg font-bold mb-2.5">Upload Image:</Label>
       <div className="flex-1 flex flex-row mb-5">
         <Input id="upload" type="file" placeholder="Choose Your File" className="mr-5 w-100" accept="image/*" onChange={handleFileChange} />
-        <Button className="bg-gray-500 mr-2.5" onClick={handleUpload} disabled={loading}>
+        <Button className="bg-gray-500 mr-2.5  font-bold" onClick={handleUpload} disabled={loading}>
           {loading ? (<Loader2 className="animate-spin" />) : ''}
           {loading ? 'Uploading...' : 'Upload'}
         </Button>
@@ -201,7 +201,7 @@ export default function MintAction () {
             cid ? (
                 <Button
                   onClick={() => window.open(`https://${process.env.NEXT_PUBLIC_PINATA_GW}/ipfs/${cid}`)}
-                  className="bg-teal-400 mr-5"
+                  className="bg-teal-400 mr-5  font-bold"
                 > Preview </Button>
             ) : ''
           }
@@ -221,7 +221,7 @@ export default function MintAction () {
           }
         </div>
       </div>
-      <Button className="bg-gray-500 mr-2.5" onClick={handleMint} disabled={mintLoading}>
+      <Button className="bg-cyan-400 hover:bg-cyan-300 mr-2.5 font-bold" onClick={handleMint} disabled={mintLoading}>
         {mintLoading ? (<Loader2 className="animate-spin" />) : ''}
         {mintLoading ? 'Minting...' : 'Mint !'}
       </Button>

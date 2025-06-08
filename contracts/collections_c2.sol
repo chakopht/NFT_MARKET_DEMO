@@ -6,12 +6,16 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
+import "hardhat/console.sol";
 
-contract SmilyCollection is Initializable, UUPSUpgradeable, ERC721URIStorageUpgradeable,  OwnableUpgradeable {
+
+contract SmilyCollectionC2 is Initializable, UUPSUpgradeable, ERC721URIStorageUpgradeable,  OwnableUpgradeable {
     uint256 public currentTokenId;
+    uint256 public counter;
     address internal bridge;
 
     function init(address initialOwner) public initializer{
+        // SML NFT on chain2
         __UUPSUpgradeable_init();
         __ERC721_init("SmilyCollection", "SML");
         __Ownable_init(initialOwner);
@@ -19,14 +23,6 @@ contract SmilyCollection is Initializable, UUPSUpgradeable, ERC721URIStorageUpgr
 
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner{
 
-    }
-
-    function _exist(uint256 tokenId) internal view returns (bool) {
-        address owner = _ownerOf(tokenId);
-        if (owner == address(0)){
-            return false;
-        }
-        return true;
     }
 
     function setBridge(address _bridge) external onlyOwner {
@@ -43,21 +39,17 @@ contract SmilyCollection is Initializable, UUPSUpgradeable, ERC721URIStorageUpgr
 
     function _mint_uri(address recipient, uint256 tokenId, string memory tokenUri) internal {
         // Mint and set uri
+        console.log("recipient: %s", recipient);
         _safeMint(recipient, tokenId);
         _setTokenURI(tokenId, tokenUri);
-    }
-
-    function mint(string memory tokenUri) external {
-        uint256 newTokenId = ++currentTokenId;
-        while (_exist(newTokenId) == true){
-            newTokenId = ++currentTokenId;
-        }
-        _mint_uri(msg.sender, newTokenId, tokenUri);
+        console.log("mint finished");
     }
 
     function bridge_mint(address recipient, uint256 tokenId, string memory tokenUri) external {
         // Mint by bridge adapter
+        counter++;
         require(msg.sender == bridge, "this is only work for bridge");
+        console.log("counter: %s", counter);
         _mint_uri(recipient, tokenId, tokenUri);
     }
 }
