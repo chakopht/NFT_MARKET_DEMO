@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { useAccount, useChainId } from "wagmi";
-import { bridgeConfig } from "./config_dev";
+import { useAccount } from "wagmi";
 
 
 export default function AccountStatus() {

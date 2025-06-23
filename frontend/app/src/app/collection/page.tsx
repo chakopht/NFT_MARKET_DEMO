@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { gql, GraphQLClient } from "graphql-request"
 import { readContract, getAccount } from "@wagmi/core";
 import { erc721Abi } from "viem";
-import { rainbowConfig, graphNode, bridgeConfig } from "@/components/config_dev";
+import { rainbowConfig, bridgeConfig } from "@/components/config";
 import { PacksQueryResponse } from "@/components/itemGrid";
 import { useChainId } from "wagmi";
 
