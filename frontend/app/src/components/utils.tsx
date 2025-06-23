@@ -1,7 +1,7 @@
-type ABI = {
+type AbiObj = {
     collection: any[],
-    bridge: any[],
-    marketplace: any[]
+    bridge: any,
+    marketplace: any
 }
 
 export type SubRecord = {
@@ -10,7 +10,7 @@ export type SubRecord = {
     bridge: `0x${string}`,
     collection: `0x${string}`[],
     market: `0x${string}`,
-    abi: ABI,
+    abi: AbiObj,
     graph: string
 }
 

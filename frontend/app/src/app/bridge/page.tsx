@@ -182,7 +182,7 @@ export default function Home() {
 
             // Estimate gasfee
             const estimate_price = await bridge_estimator(tokenId, uri, address, from.axlar, to.axlar, Environment.TESTNET);
-            if (typeof estimate_price !== 'string') {
+            if (typeof estimate_price !== 'string' || estimate_price == undefined) {
                 console.log("estimate is : %s", estimate_price)
                 setMsg("Estimate gas failed.");
                 setLoading(false);
