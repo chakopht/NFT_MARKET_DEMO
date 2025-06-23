@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChangeEvent, useState } from "react";
-import { rainbowConfig,  bridgeConfig } from "./config_dev";
+import { rainbowConfig,  bridgeConfig } from "./config";
 import { writeContract, getAccount, simulateContract, waitForTransactionReceipt, readContract } from "@wagmi/core";
 import { Input } from "./ui/input";
 import { Switch } from "./ui/switch";

@@ -14,7 +14,7 @@ import { useState, ChangeEvent } from 'react';
 import axios from 'axios';
 import { writeContract, getAccount, simulateContract, waitForTransactionReceipt } from '@wagmi/core'
 
-import { bridgeConfig, rainbowConfig, mintChainId } from "@/components/config_dev";
+import { bridgeConfig, rainbowConfig, mintChainId } from "@/components/config";
 import { Log, parseEventLogs, parseUnits } from "viem";
 import { useChainId } from "wagmi";
 

@@ -6,6 +6,7 @@ import {
   sepolia, scrollSepolia
 } from 'wagmi/chains';
 import { CHAINS } from "@axelar-network/axelarjs-sdk";
+import { SubRecord } from './utils';
 
 
 // contract ABI
@@ -2430,7 +2431,7 @@ export const collection2ABI = [
 // Mint on mainnet
 export const mintChainId = sepolia.id;
 
-type BridgeConfig = Record<number, any>;
+type BridgeConfig = Record<number, SubRecord>;
 
 // test bridge which is support
 export const bridgeConfig: BridgeConfig = {

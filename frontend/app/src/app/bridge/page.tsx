@@ -9,7 +9,7 @@ import React, { ChangeEvent, useState, useEffect } from "react";
 import { useAccount, useChainId, useSwitchChain } from 'wagmi'
 import { readContract, simulateContract, waitForTransactionReceipt, writeContract } from "@wagmi/core";
 import { DialogHeader, Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { bridgeConfig, rainbowConfig } from "@/components/config_dev";
+import { bridgeConfig, rainbowConfig } from "@/components/config";
 import { bridge_estimator } from '@/components/axlear_tools'
 import { Environment } from "@axelar-network/axelarjs-sdk";
 import { gql, GraphQLClient } from "graphql-request";
@@ -107,8 +107,9 @@ export default function Home() {
     const handleCollectionInput = (event: ChangeEvent<HTMLInputElement>) => {
         // set collection address and check format
         const addr = bridgeConfig[chainId].collection.find((addr: `0x${string}`) => (addr.toLowerCase() == event.target.value.toLowerCase()))
-        const colIndex = bridgeConfig[chainId].collection.indexOf(addr);
+        
         if (addr != undefined){
+            const colIndex = bridgeConfig[chainId].collection.indexOf(addr);
             setColIndex(colIndex);
             setColAddr(addr);
             setMsg(true);
@@ -181,7 +182,7 @@ export default function Home() {
 
             // Estimate gasfee
             const estimate_price = await bridge_estimator(tokenId, uri, address, from.axlar, to.axlar, Environment.TESTNET);
-            if (typeof estimate_price !== 'string') {
+            if (typeof estimate_price !== 'string' || estimate_price == undefined) {
                 console.log("estimate is : %s", estimate_price)
                 setMsg("Estimate gas failed.");
                 setLoading(false);
@@ -310,7 +311,7 @@ export default function Home() {
                                         </DialogHeader>
                                         <div className="w-full grid-rows-1">
                                             {chains.map((chain) => (
-                                                <React.Fragment>
+                                                <React.Fragment key={chain.id}>
                                                     { chain.id === chainId ? (
                                                         <Button className="w-full opacity-100 pointer-events-none justify-start text-left bg-indigo-600 font-bold rounded-xl text-lg mb-2">{chain.name}<SquareCheckBigIcon className="ml-35 w-6 h-6 text-green-300"/></Button>
                                                     ) :
@@ -368,7 +369,7 @@ export default function Home() {
                                         </DialogHeader>
                                         <div className="w-full grid-rows-1">
                                             {chains.map((chain) => (
-                                                <React.Fragment>
+                                                <React.Fragment key={chain.id}>
                                                     { chain.id === targetChain ? (
                                                         <Button className="w-full opacity-100 pointer-events-none justify-start text-left bg-indigo-600 font-bold rounded-xl text-lg mb-2">{chain.name}<SquareCheckBigIcon className="ml-35 w-6 h-6 text-green-300"/></Button>
                                                     ) :
