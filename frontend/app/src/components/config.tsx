@@ -3,28 +3,10 @@ import {
   getDefaultConfig
 } from '@rainbow-me/rainbowkit';
 import {
-  sepolia
+  sepolia, scrollSepolia
 } from 'wagmi/chains';
+import { CHAINS } from "@axelar-network/axelarjs-sdk";
 
-
-export const rainbowConfig = getDefaultConfig({
-  appName: "smily's market",
-  projectId: '0dec3958e29dd1710960e112dbf664b5',
-  chains: [sepolia],
-  ssr: false,
-});
-
-// test graphql node
-// export const graphNode = "http://127.0.0.1:8000/subgraphs/name/example/"
-export const graphNode = "https://api.studio.thegraph.com/query/109366/smiley/version/latest"
-
-// test contract addr
-// export const collectionsAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
-// export const marketplaceAddress =  '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512'
-
-// sepolia testnet
-export const collectionsAddress = '0xfD4919E90281746ec421C0a64a3e97cA5c138cFe'
-export const marketplaceAddress =  '0xB0064A2490B43db22f4d67087Ade820b374b5624'
 
 // contract ABI
 export const collectionABI = [
@@ -904,6 +886,18 @@ export const marketplaceABI = [
         "internalType": "uint256",
         "name": "lock",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
       }
     ],
     "name": "Lock",
@@ -990,6 +984,12 @@ export const marketplaceABI = [
         "indexed": false,
         "internalType": "uint256",
         "name": "price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "flag",
         "type": "uint256"
       }
     ],
@@ -2425,4 +2425,48 @@ export const collection2ABI = [
     "type": "function"
   }
 ]
+
+
+// Mint on mainnet
+export const mintChainId = sepolia.id;
+
+type BridgeConfig = Record<number, any>;
+
+// test bridge which is support
+export const bridgeConfig: BridgeConfig = {
+  11_155_111: { // sepolia
+    name: sepolia.name,
+    axlar: CHAINS.TESTNET.SEPOLIA,
+    bridge: "0x68bcCb7c3c30b85083241451CFC2C7b1BD3beB83",
+    collection: ["0xDBC7E73f196ad46035625f9FBD43A482aFF4ACF7"],
+    market: "0x5990F077E1e0b0bad943Cd7017A4516231B393D2",
+    abi: {
+      collection: [collectionABI],
+      bridge: bridgeABI,
+      marketplace: marketplaceABI
+    },
+    graph: "https://api.studio.thegraph.com/query/109366/smiley-market-sepolia/version/latest"
+  },
+  534_351: { // scroll sepolia
+    name: scrollSepolia.name,
+    axlar: CHAINS.TESTNET.SCROLL,
+    bridge: "0x6CBCD97e8464384555044aD7e0B7b7F692C87E90",
+    collection: ["0xB0064A2490B43db22f4d67087Ade820b374b5624"],
+    market: "0xFDE5E4FEBcF0E67d5A1285f353641F6749905727",
+    abi: {
+      collection: [collection2ABI],
+      bridge: bridgeABI,
+      marketplace: marketplaceABI
+    },
+    graph: "https://api.studio.thegraph.com/query/109366/smiley-market-scroll-sepolia/version/latest"
+  },
+}
+
+export const rainbowConfig = getDefaultConfig({
+  appName: "smily's market",
+  projectId: '0dec3958e29dd1710960e112dbf664b5',
+  chains: [sepolia, scrollSepolia],
+  ssr: false,
+});
+
 

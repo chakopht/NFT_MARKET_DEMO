@@ -15,10 +15,12 @@ import { Label } from "@/components/ui/label"
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChangeEvent, useState } from "react";
-import { rainbowConfig, marketplaceABI, marketplaceAddress, collectionABI, collectionsAddress } from "./config";
-import { writeContract, getAccount, simulateContract, waitForTransactionReceipt } from "@wagmi/core";
+import { rainbowConfig,  bridgeConfig } from "./config_dev";
+import { writeContract, getAccount, simulateContract, waitForTransactionReceipt, readContract } from "@wagmi/core";
 import { Input } from "./ui/input";
 import { Switch } from "./ui/switch";
+import { useChainId } from "wagmi";
+import { sleep } from "./utils";
 
 export type MarketItem = {
   id: string;
@@ -41,6 +43,7 @@ export interface PacksQueryResponse {
     tokenId: string;
     lock: bigint;
     flag: bigint;
+    status: bigint;
   }[];
 }
 
@@ -58,6 +61,7 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
   const [price, setPrice] = useState<string | null>(null);
   const [priceErr, setPriceErr] = useState<string | null>(null);
   const [listed, setListed] = useState<bigint | null>(null);
+  const chainId = useChainId();
   // to change the items info independently
 
   const checkAccount = (seller: `0x${string}`, flag: boolean=true) => {
@@ -110,54 +114,40 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
   async function buyNFT(nft: `0x${string}`, tokenId: bigint, price: string) {
     // buying a nft
     setLoading(true);
-        const account = getAccount(rainbowConfig);
-        if (account.isConnected) {
-          try {
-              const res = await simulateContract(rainbowConfig, {
-                abi: marketplaceABI,
-                address: marketplaceAddress,
-                functionName: 'buyNFT',
-                args: [
-                  nft, 
-                  tokenId
-                ],
-                value: parseEther(price),
-                connector: account.connector
-              })
-    
-              await writeContract(rainbowConfig, res.request);
+    const account = getAccount(rainbowConfig);
+    if (account.isConnected) {
+      try {
+          const colIndex = bridgeConfig[chainId].collection.findIndex((item: `0x${string}`) => item.toLowerCase() === nft.toLowerCase());
+          if (colIndex == -1) { throw new Error("NFT abi is invalid."); }
+          const res = await simulateContract(rainbowConfig, {
+            abi: bridgeConfig[chainId].abi.marketplace,
+            address: bridgeConfig[chainId].market,
+            functionName: 'buyNFT',
+            args: [
+              nft, 
+              tokenId
+            ],
+            value: parseEther(price),
+            connector: account.connector
+          })
 
-              // approve the item
-              const approve_res = await simulateContract(rainbowConfig, {
-                abi: collectionABI,
-                address: collectionsAddress,
-                functionName: 'approve',
-                args: [
-                  marketplaceAddress,
-                  tokenId
-                ],
-                connector: account.connector
-              })
-              
-              const approve_hash = await writeContract(rainbowConfig, approve_res.request);
-              await waitForTransactionReceipt(rainbowConfig, {
-                hash: approve_hash
-              });
+          await writeContract(rainbowConfig, res.request);
+          await sleep(1500);
 
-              // reFetch the items
-              await reFetchItems();
-    
-              // get mint tokenid
-              // const buy_receipt = await waitForTransactionReceipt(rainbowConfig, {
-              //   hash: buy_hash
-              // });
-    
-            console.log("buying finished")
-          } catch (error) {
-            console.log(`Buying Failure ${error} !`)
-          }
-        }
-        setLoading(false);
+          // reFetch the items
+          await reFetchItems();
+
+          // get mint tokenid
+          // const buy_receipt = await waitForTransactionReceipt(rainbowConfig, {
+          //   hash: buy_hash
+          // });
+
+        console.log("buying finished")
+      } catch (error) {
+        console.log(`Buying Failure ${error} !`)
+      }
+    }
+    setLoading(false);
   };
 
   async function unPack(nft: `0x${string}`, tokenId: bigint){
@@ -168,8 +158,8 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
       try {
         setLoading(true);
         const res = await simulateContract(rainbowConfig, {
-          abi: marketplaceABI,
-          address: marketplaceAddress,
+          abi: bridgeConfig[chainId].abi.marketplace,
+          address: bridgeConfig[chainId].market,
           functionName: 'unPack',
           args: [
             nft, 
@@ -202,17 +192,19 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
       // save price
       const parse_price = parseUnits(price, 18);
       if (parse_price != oldPrice){
-        refetchFlag =  refetchFlag || await savePrice(nft, tokenId, parse_price);
+        const flag1 = await savePrice(nft, tokenId, parse_price);
+        refetchFlag =  refetchFlag || flag1;
       }
     }
 
     if (listed != null && listed != oldListed){
       // save flag
-      refetchFlag = refetchFlag || await saveFlag(nft, tokenId, listed);
+      const flag2 = await saveFlag(nft, tokenId, listed);
+      refetchFlag = refetchFlag || flag2;
     }
 
     // refetch the items
-    if (refetchFlag) {reFetchItems();}
+    if (refetchFlag) { await sleep(1500); reFetchItems();}
 
     setLoading(false);
     // setTimeout(async() => {await reFetchItems(); setLoading(false);}, 1500);
@@ -225,8 +217,8 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
       // change nft price
       try {
         const res = await simulateContract(rainbowConfig, {
-          abi: marketplaceABI,
-          address: marketplaceAddress,
+          abi: bridgeConfig[chainId].abi.marketplace,
+          address: bridgeConfig[chainId].market,
           functionName: 'setPrice',
           args: [
             nft, 
@@ -237,6 +229,10 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
         })
   
         await writeContract(rainbowConfig, res.request);
+        const hash = await writeContract(rainbowConfig, res.request);
+        await waitForTransactionReceipt(rainbowConfig, {
+          hash
+        });
         return true;
       } catch (error) {
         console.log(`SetPrice Failure ${error} !`);
@@ -251,9 +247,39 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
     if (account.isConnected) {
       // change nft price
       try {
+        if (flag == BigInt(1)){
+          // check approve to market
+          const approve = await readContract(rainbowConfig, {
+            abi: bridgeConfig[chainId].abi.collection[0],
+            address: bridgeConfig[chainId].collection[0],
+            functionName: 'getApproved',
+            args: [
+              tokenId
+            ]
+          });
+          if (typeof(approve) != 'string') throw Error('approve type error');
+          if (bridgeConfig[chainId].market.toLowerCase() != approve.toLowerCase()){
+            // set approve
+            const approve_res = await simulateContract(rainbowConfig, {
+              abi: bridgeConfig[chainId].abi.collection[0],
+              address: bridgeConfig[chainId].collection[0],
+              functionName: 'approve',
+              args: [
+                bridgeConfig[chainId].market,
+                tokenId
+              ],
+              connector: account.connector
+            })
+  
+            const approve_hash = await writeContract(rainbowConfig, approve_res.request);
+            await waitForTransactionReceipt(rainbowConfig, {
+              hash: approve_hash
+            });
+          }
+        }
         const res = await simulateContract(rainbowConfig, {
-          abi: marketplaceABI,
-          address: marketplaceAddress,
+          abi: bridgeConfig[chainId].abi.marketplace,
+          address: bridgeConfig[chainId].market,
           functionName: 'setFlag',
           args: [
             nft, 
@@ -262,7 +288,10 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
           ],
           connector: account.connector
         })
-        await writeContract(rainbowConfig, res.request);
+        const hash = await writeContract(rainbowConfig, res.request);
+        await waitForTransactionReceipt(rainbowConfig, {
+          hash
+        });
         return true;
       } catch (error) {
         console.log(`SetFlag Failure ${error} !`);
@@ -278,7 +307,9 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
           {items.map((item) => (
             <Dialog key={item.tokenId} onOpenChange={(open: boolean) => handleDialog(open, item.flag)}>
               <DialogTrigger asChild>
-                <Card key={item.tokenId} className="transition hover:shadow-2xl w-55 h-60 pt-0 pb-3 mb-3 gap-0">
+                <Card key={item.tokenId} className={ item.flag == BigInt(1) ? 
+                  "transition hover:shadow-2xl w-55 h-60 pt-0 pb-3 mb-3 gap-0" : 
+                  "transition hover:shadow-2xl w-55 h-60 pt-0 pb-3 mb-3 gap-0 bg-muted text-muted-foreground opacity-60"}>
                   <CardHeader className="relative w-full h-50 overflow-hidden">
                       <Image
                         src={item.uri}
@@ -329,7 +360,7 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
                             <Label className="font-bold text-left">
                               Listed:
                             </Label>
-                            <Switch className="data-[state=checked]:bg-cyan-400" checked={Boolean(listed)} onCheckedChange={handleFlag} disabled={inputFlag ? true : false}/>
+                            <Switch className="data-[state=checked]:bg-cyan-400" checked={listed == BigInt(1)} onCheckedChange={handleFlag} disabled={inputFlag ? true : false}/>
                         </div>
                         ) : ''
                       }
@@ -343,29 +374,24 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
                     </Button>
                   ) : (
                     <div>
-                      {/* <Button className="mr-2.5" onClick={()=>unPack(item.nft, BigInt(item.tokenId))} 
-                      disabled={loading || checkAccount(item.seller, false)}>
-                        {loading ? (<Loader2 className="animate-spin" />) : ''}
-                        {loading ? 'Waiting...' : 'UNLIST'}
-                      </Button> */}
                       {
-                        inputFlag ? (<div>
-                          <Button className="mr-2.5 bg-slate-700 hover:bg-slate-600 font-bold" onClick={()=>setInputFlag(false)} disabled={loading || checkAccount(item.seller, false)}>
+                        inputFlag ? (<div className="flex justify-between w-full gap-2">
+                          <Button className="hover:bg-slate-600 font-bold justify-self-end" onClick={()=>setInputFlag(false)} disabled={loading || checkAccount(item.seller, false)}>
                             Change
                           </Button>
-                          <Button className="mr-2.5 font-bold" variant="destructive" onClick={()=>unPack(item.nft, BigInt(item.tokenId))} 
+                          <Button className="font-bold justify-self-end" variant="destructive" onClick={()=>unPack(item.nft, BigInt(item.tokenId))} 
                           disabled={loading || checkAccount(item.seller, false)}>
-                            {loading ? (<Loader2 className="animate-spin" />) : ''}
+                            {loading ? (<Loader2 className="h-2 w-2 animate-spin" />) : ''}
                             {loading ? 'Waiting...' : 'REMOVE !'}
                           </Button></div>
                         ):
                         (
-                          <div>
-                            <Button className="mr-2.5 bg-cyan-400 hover:bg-cyan-300 font-bold" onClick={()=>saveParam(item.nft, BigInt('1'), item.price, item.flag)} disabled={loading || checkAccount(item.seller, false)}>
-                              {loading ? (<Loader2 className="animate-spin" />) : ''}
-                              {loading ? 'Waiting...' : 'Save'}
+                          <div className="flex justify-between w-full gap-2">
+                            <Button className="mr-2.5 bg-cyan-400 hover:bg-cyan-300 font-bold justify-self-end" onClick={()=>saveParam(item.nft, BigInt(item.tokenId), item.price, item.flag)} disabled={loading || checkAccount(item.seller, false)}>
+                              {loading ? (<Loader2 className="mx-auto animate-spin" />) : ''}
+                              {loading ? 'Saving...' : 'Save'}
                             </Button>
-                            <Button className="mr-2.5 bg-slate-700 hover:bg-slate-600 font-bold" onClick={()=>cancelParam(item.flag)} disabled={loading || checkAccount(item.seller, false)}>
+                            <Button className="mr-2.5 hover:bg-slate-600 font-bold justify-self-end" onClick={()=>cancelParam(item.flag)} disabled={loading || checkAccount(item.seller, false)}>
                               Cancel
                             </Button>
                           </div>

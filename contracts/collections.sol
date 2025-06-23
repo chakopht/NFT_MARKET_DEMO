@@ -7,7 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 
-contract SmilyCollection is Initializable, UUPSUpgradeable, ERC721URIStorageUpgradeable,  OwnableUpgradeable {
+contract SmilyCollection is Initializable, UUPSUpgradeable, ERC721URIStorageUpgradeable, OwnableUpgradeable {
     uint256 public currentTokenId;
     address internal bridge;
 

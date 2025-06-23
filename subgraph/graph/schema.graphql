@@ -1,5 +1,5 @@
 type Pack @entity(immutable: false) {
-  id: ID! # tokenid
+  id: ID! # tokenid and nft
   tokenId: String!
   seller: Bytes!
   price: BigInt!

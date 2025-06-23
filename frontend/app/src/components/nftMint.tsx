@@ -12,11 +12,11 @@ import {
 import { Loader2 } from "lucide-react";
 import { useState, ChangeEvent } from 'react';
 import axios from 'axios';
-import { marketplaceABI, collectionABI } from "@/components/config";
 import { writeContract, getAccount, simulateContract, waitForTransactionReceipt } from '@wagmi/core'
 
-import { collectionsAddress, marketplaceAddress, rainbowConfig } from "@/components/config";
+import { bridgeConfig, rainbowConfig, mintChainId } from "@/components/config_dev";
 import { Log, parseEventLogs, parseUnits } from "viem";
+import { useChainId } from "wagmi";
 
 type EventArgs = {
   _tokenId: bigint
@@ -32,6 +32,7 @@ export default function MintAction () {
   const [cid, setIpfsCid] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [mintLoading, setMintLoading] = useState<boolean>(false);
+  const chainId = useChainId();
 
   // Handle file input change event
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -99,7 +100,14 @@ export default function MintAction () {
     const account = getAccount(rainbowConfig);
     if (account.isConnected && cid && price) {
       try {
-            // mint
+          // mint
+          // Only work for one blockchain. Others only support bridge
+          if (chainId != mintChainId) {throw Error("Blockchain doesn't support mint!");}
+          const collectionsAddress = bridgeConfig[chainId].collection[0];
+          const collectionABI = bridgeConfig[chainId].abi.collection[0];
+          const marketplaceAddress = bridgeConfig[chainId].market;
+          const marketplaceABI = bridgeConfig[chainId].abi.marketplace;
+          
           const mint_res = await simulateContract(rainbowConfig, {
             abi: collectionABI,
             address: collectionsAddress,
@@ -108,7 +116,7 @@ export default function MintAction () {
               `https://${process.env.NEXT_PUBLIC_PINATA_GW}/ipfs/${cid}`
             ],
             connector: account.connector
-          })
+          });
 
           const mint_hash = await writeContract(rainbowConfig, mint_res.request);
 
@@ -120,8 +128,8 @@ export default function MintAction () {
           const eventLogs = parseEventLogs({
             abi: collectionABI,
             logs: mint_receipt.logs
-          })
-          const eventLog = eventLogs[1] as Log & { args:EventArgs }
+          });
+          const eventLog = eventLogs[1] as Log & { args:EventArgs };
           const tokenId = eventLog.args._tokenId;
 
           // take a pack
@@ -185,7 +193,7 @@ export default function MintAction () {
   return (
     <div>
       <CardHeader className="my-5">
-        <CardTitle className="text-4xl">Mint A New One !</CardTitle>
+        <CardTitle className="text-4xl">MINT A NEW ONE !</CardTitle>
         <CardDescription>Create your own NFT.</CardDescription>
       </CardHeader>
       <CardContent>
@@ -221,9 +229,9 @@ export default function MintAction () {
           }
         </div>
       </div>
-      <Button className="bg-cyan-400 hover:bg-cyan-300 mr-2.5 font-bold" onClick={handleMint} disabled={mintLoading}>
+      <Button className=" mr-2.5 font-bold" onClick={handleMint} disabled={mintLoading || (chainId != mintChainId)}>
         {mintLoading ? (<Loader2 className="animate-spin" />) : ''}
-        {mintLoading ? 'Minting...' : 'Mint !'}
+        {(chainId == mintChainId) ? (mintLoading ? 'Minting...' : 'Mint !') : `Only for ${bridgeConfig[mintChainId].name}`}
       </Button>
       </CardContent>
     </div>

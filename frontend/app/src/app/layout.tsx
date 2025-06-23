@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-import { rainbowConfig } from "@/components/config";
+import { rainbowConfig } from "@/components/config_dev";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 

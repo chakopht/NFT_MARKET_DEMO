@@ -201,7 +201,7 @@ const estimate_1 = async (tokenId: bigint, uri: string) => {
       undefined,
       payload
     )
-    console.log(response);
+    console.log(typeof(response));
 }
 
 const check_token_exist = async (client: PublicClient, tokenId: bigint, abi: any, addr: `0x${string}`) => {
@@ -272,13 +272,13 @@ const set_approve = async (client: WalletClient, pubclient: PublicClient, tokenI
 const main = async () => {
     // set gateway receiver as bridge address
 
-    // set_gateway_recivier(anvilClient, anvilPubClient, gatewayAddress, bridgeAddress, gateway_abi);
-    // set_gateway_recivier(hardhatClient, hardhatPubClient, hardhatGatewayAddress, hardhatBridgeAddress, gateway_abi);
+    await set_gateway_recivier(anvilClient, anvilPubClient, gatewayAddress, bridgeAddress, gateway_abi);
+    await set_gateway_recivier(hardhatClient, hardhatPubClient, hardhatGatewayAddress, hardhatBridgeAddress, gateway_abi);
 
     //set collection bridge
 
-    // set_collection_bridge(anvilClient, anvilPubClient, collectionsAddress, bridgeAddress, collection_c2_abi);
-    // set_collection_bridge(hardhatClient, hardhatPubClient, hardhatCollectionsAddress, hardhatBridgeAddress, collection_abi);
+    await set_collection_bridge(anvilClient, anvilPubClient, collectionsAddress, bridgeAddress, collection_c2_abi);
+    await set_collection_bridge(hardhatClient, hardhatPubClient, hardhatCollectionsAddress, hardhatBridgeAddress, collection_abi);
 
     // mint pack estimate
     // mint(client.hardhat);
@@ -294,8 +294,8 @@ const main = async () => {
     // start_bridge_anvil(BigInt(1));
 
     // verify is bridge success
-    check_token_exist(hardhatPubClient, BigInt(1), collection_abi, hardhatCollectionsAddress);
-    // check_token_exist(anvilPubClient, BigInt(1), collection_c2_abi, collectionsAddress);
+    // check_token_exist(hardhatPubClient, BigInt(2), collection_abi, hardhatCollectionsAddress);
+    // check_token_exist(anvilPubClient, BigInt(2), collection_c2_abi, collectionsAddress);
 
 
   // const payload = '0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000f8b0a10e4700000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000007068747470733a2f2f636f666665652d656c646573742d6d6f6e6b65792d3636372e6d7970696e6174612e636c6f75642f697066732f6261667962656968686e34737935656f7279647a6e6f7a3269763376336c73636a62796c6571716a6b6b6b6f37786f7a32656d346436783635737100000000000000000000000000000000';
@@ -339,6 +339,7 @@ const main = async () => {
 //     ],
 // });
 //   console.log("anvil bridge execute hash: %s", execute_hash);
+// estimate_1(BigInt(1), `https://${PINATA}/ipfs/${cid}`);
 }
 
 main();

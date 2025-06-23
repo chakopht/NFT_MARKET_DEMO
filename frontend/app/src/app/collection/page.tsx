@@ -4,32 +4,31 @@ import ItemGrid from "@/components/itemGrid";
 import { MarketItem } from "@/components/itemGrid";
 import { useState, useEffect, useRef } from "react";
 import { gql, GraphQLClient } from "graphql-request"
-import { readContract } from "@wagmi/core";
+import { readContract, getAccount } from "@wagmi/core";
 import { erc721Abi } from "viem";
-import { rainbowConfig, graphNode } from "@/components/config";
-import { getAccount } from "@wagmi/core";
+import { rainbowConfig, graphNode, bridgeConfig } from "@/components/config_dev";
 import { PacksQueryResponse } from "@/components/itemGrid";
-
-
-const graphQLClient = new GraphQLClient(graphNode);
+import { useChainId } from "wagmi";
 
 
 export default function Home() {
-  //to make sure useEffect wont be called twice
-  const test_item: MarketItem = {
-      id: "1",
-      seller: `0x120e6427A7bCC9Aa57c45facff03B83b9E983d47`,
-      price: BigInt(700000000000000),
-      nft: `0x001`,
-      uri: `https://${process.env.NEXT_PUBLIC_PINATA_GW}/ipfs/bafybeihhn4sy5eorydznoz2iv3v3lscjbyleqqjkkko7xoz2em4d6x65sq`,
-      tokenId: "test",
-      lock: BigInt(0),
-      flag: BigInt(1)
-  };
+  // mock item
+  // const mock_item: MarketItem = {
+  //     id: "1",
+  //     seller: `0x120e6427A7bCC9Aa57c45facff03B83b9E983d47`,
+  //     price: BigInt(700000000000000),
+  //     nft: `0x001`,
+  //     uri: `https://${process.env.NEXT_PUBLIC_PINATA_GW}/ipfs/bafybeihhn4sy5eorydznoz2iv3v3lscjbyleqqjkkko7xoz2em4d6x65sq`,
+  //     tokenId: "test",
+  //     lock: BigInt(0),
+  //     flag: BigInt(0)
+  // };
   const onceEffect = useRef(false);
-  const [items, setItems] = useState<MarketItem[]>([test_item]);
+  const [items, setItems] = useState<MarketItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const chainId = useChainId();
   const perPage = 12;
+  let graphQLClient = new GraphQLClient(bridgeConfig[chainId].graph);
 
 
   const fetchItems = async (skip: number = 0) => {
@@ -49,11 +48,13 @@ export default function Home() {
               orderDirection: asc
             ) {
               id
+              tokenId
               seller
               price
               nft
               flag
               status
+              lock
             }
         }`;
 
@@ -66,7 +67,8 @@ export default function Home() {
           skip: skip,
           where: {
             seller: account.address,
-            status: 1
+            status: 1,
+            lock: 0
           }
         }
       );
@@ -113,11 +115,13 @@ export default function Home() {
   useEffect(() => {
     // fetch first page
     if (onceEffect.current == false) {
-      console.log("effect called");
       onceEffect.current = true;
-      fetchItems();
+    } else {
+      console.log("chain effect called");
+      graphQLClient = new GraphQLClient(bridgeConfig[chainId].graph);
+      reFetchItems();
     }
-  }, []);
+  }, [chainId]);
 
   return (
     <div onScroll={handleScroll} className="h-screen super-scrollbar">
