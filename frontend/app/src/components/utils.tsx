@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type AbiObj = {
     collection: any[],
     bridge: any,
     marketplace: any
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export type SubRecord = {
     name: string,
