@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-import { rainbowConfig } from "@/components/config";
+import { rainbowConfig } from "@/components/config_dev";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -30,6 +30,7 @@ export default function RootLayout({
   
   return (
     <html lang="en">
+      <head><title>Smily Market</title></head>
       <body className="bg-cyan-50">
           <WagmiProvider config={rainbowConfig}>
             <QueryClientProvider client={queryClient}>

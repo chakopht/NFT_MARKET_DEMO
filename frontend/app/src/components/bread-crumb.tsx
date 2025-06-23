@@ -13,6 +13,7 @@ import {
   } from "@/components/ui/card"
 
   import { usePathname } from 'next/navigation';
+import React from "react";
   
   
   export default function DynamicBreadcrumb() {
@@ -41,12 +42,12 @@ import {
             <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
         {breadcrumbs.map((breadcrumb) => (
-          <>
+          <React.Fragment key={breadcrumb.path}>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                     <BreadcrumbLink href={breadcrumb.path}>{breadcrumb.label}</BreadcrumbLink>
                 </BreadcrumbItem>
-          </>
+          </React.Fragment>
        ))}
         </BreadcrumbList>
       </Breadcrumb>

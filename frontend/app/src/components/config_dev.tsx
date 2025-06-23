@@ -2437,28 +2437,28 @@ export const bridgeConfig: BridgeConfig = {
   11_155_111: { // sepolia
     name: sepolia.name,
     axlar: CHAINS.TESTNET.SEPOLIA,
-    bridge: "0x68bcCb7c3c30b85083241451CFC2C7b1BD3beB83",
-    collection: ["0xDBC7E73f196ad46035625f9FBD43A482aFF4ACF7"],
-    market: "0x5990F077E1e0b0bad943Cd7017A4516231B393D2",
+    bridge: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+    collection: ["0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"],
+    market: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
     abi: {
       collection: [collectionABI],
       bridge: bridgeABI,
       marketplace: marketplaceABI
     },
-    graph: "https://api.studio.thegraph.com/query/109366/smiley-market-sepolia/version/latest"
+    graph: "http://127.0.0.1:8000/subgraphs/name/market/"
   },
   534_351: { // scroll sepolia
     name: scrollSepolia.name,
     axlar: CHAINS.TESTNET.SCROLL,
-    bridge: "0x6CBCD97e8464384555044aD7e0B7b7F692C87E90",
-    collection: ["0xB0064A2490B43db22f4d67087Ade820b374b5624"],
-    market: "0xFDE5E4FEBcF0E67d5A1285f353641F6749905727",
+    bridge: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+    collection: ["0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"],
+    market: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
     abi: {
       collection: [collection2ABI],
       bridge: bridgeABI,
       marketplace: marketplaceABI
     },
-    graph: "https://api.studio.thegraph.com/query/109366/smiley-market-scroll-sepolia/version/latest"
+    graph: "http://127.0.0.1:8000/subgraphs/name/market/"
   },
 }
 

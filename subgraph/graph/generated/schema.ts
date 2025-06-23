@@ -51,6 +51,19 @@ export class Pack extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get tokenId(): string {
+    let value = this.get("tokenId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tokenId(value: string) {
+    this.set("tokenId", Value.fromString(value));
+  }
+
   get seller(): Bytes {
     let value = this.get("seller");
     if (!value || value.kind == ValueKind.NULL) {
@@ -114,5 +127,18 @@ export class Pack extends Entity {
 
   set status(value: BigInt) {
     this.set("status", Value.fromBigInt(value));
+  }
+
+  get lock(): BigInt {
+    let value = this.get("lock");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set lock(value: BigInt) {
+    this.set("lock", Value.fromBigInt(value));
   }
 }

@@ -6,10 +6,9 @@ import { useState, useEffect, useRef } from "react";
 import { gql, GraphQLClient } from "graphql-request"
 import { readContract } from "@wagmi/core";
 import { erc721Abi } from "viem";
-import { rainbowConfig, graphNode } from "@/components/config";
+import { rainbowConfig, graphNode, bridgeConfig } from "@/components/config_dev";
 import { PacksQueryResponse } from "@/components/itemGrid";
-
-const graphQLClient = new GraphQLClient(graphNode);
+import { useChainId } from "wagmi";
 
 
 export default function Home() {
@@ -17,7 +16,11 @@ export default function Home() {
   const onceEffect = useRef(false);
   const [items, setItems] = useState<MarketItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const chainId = useChainId();
   const perPage = 12;
+
+  // inital ql client
+  let graphQLClient = new GraphQLClient(bridgeConfig[chainId].graph);
 
 
   const fetchItems = async (skip: number = 0) => {
@@ -35,11 +38,13 @@ export default function Home() {
               orderDirection: asc
             ) {
               id
+              tokenId
               seller
               price
               nft
               flag
               status
+              lock
             }
         }`;
 
@@ -51,8 +56,9 @@ export default function Home() {
           first: perPage,
           skip: skip,
           where: {
-            flag: 0,
-            status: 1
+            flag: 1,
+            status: 1,
+            lock: 0,
           }
         }
       );
@@ -66,7 +72,7 @@ export default function Home() {
             address: newItems[i].nft,
             functionName: 'tokenURI',
             args: [
-              BigInt(newItems[i].id)
+              BigInt(newItems[i].tokenId)
             ]
           })
         }
@@ -98,11 +104,13 @@ export default function Home() {
   useEffect(() => {
     // fetch first page
     if (onceEffect.current == false) {
-      console.log("effect called");
       onceEffect.current = true;
-      fetchItems();
+    } else {
+      console.log("chainId effect called");
+      graphQLClient = new GraphQLClient(bridgeConfig[chainId].graph);
+      reFetchItems();
     }
-  }, []);
+  }, [chainId]);
 
   return (
     <div onScroll={handleScroll} className="h-screen super-scrollbar">

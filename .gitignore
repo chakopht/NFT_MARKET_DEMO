@@ -19,3 +19,10 @@ ignition/deployments/chain-31337
 # Local Graph Node Docker
 /subgraph/graph-node
 /subgraph/graph/build
+
+.history
+
+# test
+/frontend/app/setRecevier.ts
+/frontend/app/test_abi.ts
+/frontend/app/test.ts

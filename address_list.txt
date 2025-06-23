@@ -1,0 +1,14 @@
+sepolia:
+    SmilyCollection deployed to: 0xDBC7E73f196ad46035625f9FBD43A482aFF4ACF7
+    Marketplace deployed to: 0x5990F077E1e0b0bad943Cd7017A4516231B393D2
+    Bridge deployed to: 0x68bcCb7c3c30b85083241451CFC2C7b1BD3beB83
+scroll
+    SmilyCollection deployed to: 0xB0064A2490B43db22f4d67087Ade820b374b5624
+    Marketplace deployed to: 0xFDE5E4FEBcF0E67d5A1285f353641F6749905727
+    Bridge deployed to: 0x6CBCD97e8464384555044aD7e0B7b7F692C87E90
+
+
+subgraph sepolia
+https://api.studio.thegraph.com/query/109366/smiley-market-sepolia/version/latest
+subgraph scrollSepolia
+https://api.studio.thegraph.com/query/109366/smiley-market-scroll-sepolia/version/latest

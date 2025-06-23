@@ -6,11 +6,11 @@ schema:
 dataSources:
 - kind: ethereum/contract
   name: MarketPlaceContract
-  network: sepolia
+  network: scroll-sepolia
   source:
-    address: "0x5990F077E1e0b0bad943Cd7017A4516231B393D2" # market address
+    address: "0xFDE5E4FEBcF0E67d5A1285f353641F6749905727" # market address
     abi: MarketPlace
-    startBlock: 8610141 # remember to change or it will be slow
+    startBlock: 10599610 # remember to change or it will be slow
   mapping:
     kind: ethereum/events
     apiVersion: 0.0.9

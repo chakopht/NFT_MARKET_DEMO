@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { ethers, upgrades } = require("hardhat");
 
 describe("Marketplace", function () {
   let Marketplace, marketplace;
@@ -11,7 +11,10 @@ describe("Marketplace", function () {
 
     // Deploy mock ERC721 token
     Collection = await ethers.getContractFactory("SmilyCollection");
-    nft = await Collection.connect(deployer).deploy(deployer.address);
+    nft = await upgrades.deployProxy(Collection, [deployer.address], {
+      initializer: "init",
+      kind: "uups"
+    })
     await nft.waitForDeployment();
 
     const tokenURI = "https://coffee-eldest-monkey-667.mypinata.cloud/ipfs/bafkreiaiy3tx7tjukzrh53h7pfwekx7gg4fqm5auvuixaghwpisgjj24hi";
@@ -21,7 +24,10 @@ describe("Marketplace", function () {
 
     // Deploy Marketplace
     Marketplace = await ethers.getContractFactory("Marketplace");
-    marketplace = await Marketplace.deploy();
+    marketplace = await upgrades.deployProxy(Marketplace, [deployer.address], {
+      initializer: "init",
+      kind: "uups"
+  })
     await marketplace.waitForDeployment();
   });
 

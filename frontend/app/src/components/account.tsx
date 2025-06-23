@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { useAccount } from "wagmi";
-
+import { useAccount, useChainId } from "wagmi";
+import { bridgeConfig } from "./config_dev";
 
 
 export default function AccountStatus() {
@@ -15,7 +15,6 @@ export default function AccountStatus() {
     useEffect(() => {
         if (address != curr_address || !isConnected){
             // change route when address is changed or disconnected
-            console.log(`address: ${address} curr: ${address}`);
             setAddress(address)
             router.push(`/`);
         }

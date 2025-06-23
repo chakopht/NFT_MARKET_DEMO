@@ -11,7 +11,7 @@ import {
     SidebarMenuItem
   } from "@/components/ui/sidebar"
 
-  import { Home, Inbox, Settings } from "lucide-react"
+  import { Home, Inbox, Settings, Shuffle } from "lucide-react"
 
   import { useAccount } from "wagmi";
 
@@ -21,25 +21,25 @@ import {
 // Menu items.
 const items = [
   {
-    title: "MARKET",
+    title: "Market",
     url: "/",
     icon: Home,
   },
-  // {
-  //   title: "TOP SALES",
-  //   url: "/",
-  //   icon: Calendar,
-  // },
   {
-    title: "COLLECTIONS",
+    title: "My Tokens",
     url: "/collection",
     icon: Inbox,
   },
   {
-    title: "MINT",
+    title: "Mint",
     url: "/mint",
     icon: Settings,
-  }
+  },
+  {
+    title: "Bridge Tokens",
+    url: "/bridge",
+    icon: Shuffle,
+  },
 ]
   
 const noconnect_items = [
@@ -48,11 +48,6 @@ const noconnect_items = [
     url: "/",
     icon: Home,
   },
-  // {
-  //   title: "TOP SALES",
-  //   url: "/",
-  //   icon: Calendar,
-  // }
 ]
   
 export function AppSidebar() {
