@@ -999,6 +999,19 @@ export const collection_abi = [
     "inputs": [
       {
         "internalType": "address",
+        "name": "_market",
+        "type": "address"
+      }
+    ],
+    "name": "setAddr",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "operator",
         "type": "address"
       },
@@ -1009,19 +1022,6 @@ export const collection_abi = [
       }
     ],
     "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_bridge",
-        "type": "address"
-      }
-    ],
-    "name": "setBridge",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1448,6 +1448,16 @@ export const market_abi = [
         "internalType": "uint256",
         "name": "price",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
       }
     ],
     "name": "adapterRecv",
@@ -2329,32 +2339,6 @@ export const collection_c2_abi = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "counter",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "currentTokenId",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -2530,6 +2514,19 @@ export const collection_c2_abi = [
     "inputs": [
       {
         "internalType": "address",
+        "name": "_market",
+        "type": "address"
+      }
+    ],
+    "name": "setAddr",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "operator",
         "type": "address"
       },
@@ -2540,19 +2537,6 @@ export const collection_c2_abi = [
       }
     ],
     "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_bridge",
-        "type": "address"
-      }
-    ],
-    "name": "setBridge",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

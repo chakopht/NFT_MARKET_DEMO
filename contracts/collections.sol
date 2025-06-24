@@ -9,7 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 contract SmilyCollection is Initializable, UUPSUpgradeable, ERC721URIStorageUpgradeable, OwnableUpgradeable {
     uint256 public currentTokenId;
-    address internal bridge;
+    address internal market;
 
     function init(address initialOwner) public initializer{
         __UUPSUpgradeable_init();
@@ -29,15 +29,14 @@ contract SmilyCollection is Initializable, UUPSUpgradeable, ERC721URIStorageUpgr
         return true;
     }
 
-    function setBridge(address _bridge) external onlyOwner {
-        // only owner can set bridge address
-        bridge = _bridge;
+    function setAddr(address _market) external onlyOwner {
+        // only owner can set market address
+        market = _market;
     }
 
     function burn(uint256 tokenId) external {
-        // Setting an "auth" arguments enables the `_isAuthorized` check which verifies that the token exists
-        // (from != 0). Therefore, it is not needed to verify that the return value is not 0 here.
-        require(msg.sender == bridge, "this is only work for bridge");
+        // Burn this tokenId
+        require(msg.sender == market, "this is only work for market");
         _burn(tokenId);
     }
 
@@ -57,7 +56,7 @@ contract SmilyCollection is Initializable, UUPSUpgradeable, ERC721URIStorageUpgr
 
     function bridge_mint(address recipient, uint256 tokenId, string memory tokenUri) external {
         // Mint by bridge adapter
-        require(msg.sender == bridge, "this is only work for bridge");
+        require(msg.sender == market, "this is only work for market");
         _mint_uri(recipient, tokenId, tokenUri);
     }
 }

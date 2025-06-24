@@ -10,9 +10,7 @@ import "hardhat/console.sol";
 
 
 contract SmilyCollectionC2 is Initializable, UUPSUpgradeable, ERC721URIStorageUpgradeable,  OwnableUpgradeable {
-    uint256 public currentTokenId;
-    uint256 public counter;
-    address internal bridge;
+    address internal market;
 
     function init(address initialOwner) public initializer{
         // SML NFT on chain2
@@ -25,15 +23,14 @@ contract SmilyCollectionC2 is Initializable, UUPSUpgradeable, ERC721URIStorageUp
 
     }
 
-    function setBridge(address _bridge) external onlyOwner {
-        // only owner can set bridge address
-        bridge = _bridge;
+    function setAddr(address _market) external onlyOwner {
+        // only owner can set market address
+        market = _market;
     }
 
     function burn(uint256 tokenId) external {
-        // Setting an "auth" arguments enables the `_isAuthorized` check which verifies that the token exists
-        // (from != 0). Therefore, it is not needed to verify that the return value is not 0 here.
-        require(msg.sender == bridge, "this is only work for bridge");
+        // Burn this tokenId
+        require(msg.sender == market, "this is only work for market");
         _burn(tokenId);
     }
 
@@ -47,9 +44,7 @@ contract SmilyCollectionC2 is Initializable, UUPSUpgradeable, ERC721URIStorageUp
 
     function bridge_mint(address recipient, uint256 tokenId, string memory tokenUri) external {
         // Mint by bridge adapter
-        counter++;
-        require(msg.sender == bridge, "this is only work for bridge");
-        console.log("counter: %s", counter);
+        require(msg.sender == market, "this is only work for market");
         _mint_uri(recipient, tokenId, tokenUri);
     }
 }

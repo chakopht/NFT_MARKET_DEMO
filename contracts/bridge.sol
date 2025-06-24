@@ -12,7 +12,7 @@ import "hardhat/console.sol";
 
 interface ISMLMarket{
     function adapterSend(address nft, uint256 tokenId) external;
-    function adapterRecv(address nft, uint256 tokenId, uint256 price) external;
+    function adapterRecv(address nft, uint256 tokenId, uint256 price, address recipient, string memory tokenUri) external;
 }
 
 interface IERCSML721 is IERC721{
@@ -57,9 +57,6 @@ contract SMLBridge is Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
         //Get uri
         string memory uri = token.tokenURI(tokenId);
-        
-        // Burn this chain nft
-        token.burn(tokenId);
 
         // Prepare payload
         bytes memory payload = abi.encode(msg.sender, tokenId, price, uri);
@@ -106,10 +103,8 @@ contract SMLBridge is Initializable, UUPSUpgradeable, OwnableUpgradeable {
         bytes calldata payload
     ) internal {
         (address recipient, uint256 tokenId, uint256 price, string memory uri) = abi.decode(payload, (address, uint256, uint256, string));
-        // Mint the NFT to the recipient
-        IERCSML721(nftContract).bridge_mint(recipient, tokenId, uri);
         // Call market receive function
-        try marketplace.adapterRecv(nftContract, tokenId, price) {} 
+        try marketplace.adapterRecv(nftContract, tokenId, price, recipient, uri) {} 
         catch  {
             console.log("adapterRecv error");
             emit MarketCallRecvFailed(tokenId);

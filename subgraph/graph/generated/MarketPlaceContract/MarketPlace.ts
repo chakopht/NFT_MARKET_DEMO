@@ -309,6 +309,14 @@ export class AdapterRecvCall__Inputs {
   get price(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
+
+  get recipient(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+
+  get uri(): string {
+    return this._call.inputValues[4].value.toString();
+  }
 }
 
 export class AdapterRecvCall__Outputs {

@@ -8,6 +8,22 @@ scroll
     Bridge deployed to: 0x6CBCD97e8464384555044aD7e0B7b7F692C87E90
 
 
+sepolia:
+    Deploying SmilyCollection...
+    SmilyCollection deployed to: 0xF9E5C107e71830025801dE1a170257F7202773fe
+    Deploying Marketplace...
+    Marketplace deployed to: 0xC19A5d2cb7268DC9Df0Ca81CACeE4D9A90F014b2
+    Deploying Bridge...
+    Bridge deployed to: 0x54604a4205Fe4bf7aAf6B1fC686cbdFE65d645B5
+scroll:
+    Deploying SmilyCollectionV2...
+    SmilyCollection deployed to: 0xe93D1bcfd27123bD0233FfABfA4BdE4B62a802A8
+    Deploying Marketplace...
+    Marketplace deployed to: 0x4D5f022BFd7986B80a76AA1c2A3A2277EC86f909
+    Deploying Bridge...
+    Bridge deployed to: 0x49DB0f417a4764EeB3909De8160333a0D76aA9fE
+
+
 subgraph sepolia
 https://api.studio.thegraph.com/query/109366/smiley-market-sepolia/version/latest
 subgraph scrollSepolia

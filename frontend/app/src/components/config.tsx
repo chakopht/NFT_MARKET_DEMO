@@ -634,6 +634,19 @@ export const collectionABI = [
     "inputs": [
       {
         "internalType": "address",
+        "name": "_market",
+        "type": "address"
+      }
+    ],
+    "name": "setAddr",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "operator",
         "type": "address"
       },
@@ -644,19 +657,6 @@ export const collectionABI = [
       }
     ],
     "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_bridge",
-        "type": "address"
-      }
-    ],
-    "name": "setBridge",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1083,6 +1083,16 @@ export const marketplaceABI = [
         "internalType": "uint256",
         "name": "price",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
       }
     ],
     "name": "adapterRecv",
@@ -2092,32 +2102,6 @@ export const collection2ABI = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "counter",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "currentTokenId",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -2293,6 +2277,19 @@ export const collection2ABI = [
     "inputs": [
       {
         "internalType": "address",
+        "name": "_market",
+        "type": "address"
+      }
+    ],
+    "name": "setAddr",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "operator",
         "type": "address"
       },
@@ -2303,19 +2300,6 @@ export const collection2ABI = [
       }
     ],
     "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_bridge",
-        "type": "address"
-      }
-    ],
-    "name": "setBridge",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2440,9 +2424,9 @@ export const bridgeConfig: BridgeConfig = {
   11_155_111: { // sepolia
     name: sepolia.name,
     axlar: CHAINS.TESTNET.SEPOLIA,
-    bridge: "0x68bcCb7c3c30b85083241451CFC2C7b1BD3beB83",
-    collection: ["0xDBC7E73f196ad46035625f9FBD43A482aFF4ACF7"],
-    market: "0x5990F077E1e0b0bad943Cd7017A4516231B393D2",
+    bridge: "0x54604a4205Fe4bf7aAf6B1fC686cbdFE65d645B5",
+    collection: ["0xF9E5C107e71830025801dE1a170257F7202773fe"],
+    market: "0xC19A5d2cb7268DC9Df0Ca81CACeE4D9A90F014b2",
     abi: {
       collection: [collectionABI],
       bridge: bridgeABI,
@@ -2453,9 +2437,9 @@ export const bridgeConfig: BridgeConfig = {
   534_351: { // scroll sepolia
     name: scrollSepolia.name,
     axlar: CHAINS.TESTNET.SCROLL,
-    bridge: "0x6CBCD97e8464384555044aD7e0B7b7F692C87E90",
-    collection: ["0xB0064A2490B43db22f4d67087Ade820b374b5624"],
-    market: "0xFDE5E4FEBcF0E67d5A1285f353641F6749905727",
+    bridge: "0x49DB0f417a4764EeB3909De8160333a0D76aA9fE",
+    collection: ["0xe93D1bcfd27123bD0233FfABfA4BdE4B62a802A8"],
+    market: "0x4D5f022BFd7986B80a76AA1c2A3A2277EC86f909",
     abi: {
       collection: [collection2ABI],
       bridge: bridgeABI,

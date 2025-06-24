@@ -386,9 +386,15 @@ export default function Home() {
                             <div className="w-110 border-b border-slate-400 mx-auto" />
                         </CardContent>
                         <CardContent>
-                            <div className="grid grid-rows-1 grid-cols-2 w-full">
-                                <Label className="font-bold text-base pb-3">Recipient</Label>
-                                <Label className="font-bold text-base justify-self-end pb-3">{truncateAddress(address)}</Label>
+                            <div className="grid grid-rows-1 grid-cols-2 w-full mb-3">
+                                <Label className="font-bold text-base">Recipient</Label>
+                                <Label className="font-bold text-base justify-self-end">{truncateAddress(address)}</Label>
+                            </div>
+                            <div className="grid grid-rows-1 grid-cols-2 w-full mb-5">
+                                <Label className="font-bold text-base">Check Bridge Status</Label>
+                                <Button className="w-37 font-bold justify-self-end rounded-3xl" onClick={() => window.open(`https://testnet.axelarscan.io/address/${address}?transfersType=gmp`)}>
+                                    Check
+                                </Button>
                             </div>
                             <div className="flex justify-center items-center w-full">   
                                 <Button className="w-full h-12 rounded-xl font-bold" onClick={handleBridge} disabled={loading || !targetCheck || (collectionAddr == undefined) || (tokenId == undefined)}>

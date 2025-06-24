@@ -9,6 +9,12 @@ import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol
 import "hardhat/console.sol";
 
 
+interface IERCSML721 is IERC721{
+    function tokenURI(uint256 tokenId) external view returns (string memory);
+    function burn(uint256 tokenId) external;
+    function bridge_mint(address recipient, uint256 tokenId, string memory tokenUri) external;
+}
+
 
 contract Marketplace is ReentrancyGuardUpgradeable, UUPSUpgradeable, OwnableUpgradeable {
 
@@ -81,24 +87,27 @@ contract Marketplace is ReentrancyGuardUpgradeable, UUPSUpgradeable, OwnableUpgr
 
     function adapterSend(address nft, uint256 tokenId) external{
         console.log("adapterSend nft: %s tokenId: %d", nft, tokenId);
-        IERC721 token = IERC721(nft);
+        IERCSML721 token = IERCSML721(nft);
         address recpient = token.ownerOf(tokenId);
+        
         emit Lock(nft, tokenId, 1, nfts_price[nft][tokenId], recpient);
+        // Burn this chain nft
+        token.burn(tokenId);
     }
 
-    function adapterRecv(address nft, uint256 tokenId, uint256 price) external{
+    function adapterRecv(address nft, uint256 tokenId, uint256 price, address recipient, string memory uri) external{
         console.log("adapterRecv nft: %s tokenId: %d price: %d ", nft, tokenId, price);
-        IERC721 token = IERC721(nft);
-        address recpient = token.ownerOf(tokenId);
+        IERCSML721 token = IERCSML721(nft);
+        token.bridge_mint(recipient, tokenId, uri);
         if (nfts_price[nft][tokenId] > 0){
             // release lock if token is exist
             console.log("market: %s is exist Lock event", tokenId);
             nfts_price[nft][tokenId] = price;
-            emit Lock(nft, tokenId, 0, price, recpient);
+            emit Lock(nft, tokenId, 0, price, recipient);
         } else {
             // Take a pack if token is new
             console.log("market: %s is new one _pack", tokenId);
-            _pack(nft, tokenId, price, recpient);
+            _pack(nft, tokenId, price, recipient);
         }
     }
 }
