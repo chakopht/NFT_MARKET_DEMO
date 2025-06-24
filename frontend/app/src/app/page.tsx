@@ -5,7 +5,6 @@ import { MarketItem } from "@/components/itemGrid";
 import { useState, useEffect, useRef } from "react";
 import { gql, GraphQLClient } from "graphql-request"
 import { readContract } from "@wagmi/core";
-import { erc721Abi } from "viem";
 import { rainbowConfig, bridgeConfig } from "@/components/config";
 import { PacksQueryResponse } from "@/components/itemGrid";
 import { useChainId } from "wagmi";
