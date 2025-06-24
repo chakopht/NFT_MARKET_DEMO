@@ -223,7 +223,7 @@ export default function Home() {
                 address: from.bridge,
                 functionName: 'sendNFT',
                 args: [
-                    to.name,
+                    to.axlar,
                     to.bridge,
                     tokenId,
                     price,
