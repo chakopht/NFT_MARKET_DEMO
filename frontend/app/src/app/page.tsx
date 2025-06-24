@@ -82,6 +82,7 @@ export default function Home() {
             newItems[i].uri = ""
           }
         } catch (err){
+          console.log(err);
           newItems[i].uri = ""
         }
         }
