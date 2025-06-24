@@ -297,12 +297,12 @@ export default function Home() {
                                 <Label className="font-bold text-xl w-1/2">From</Label>
                                 <Dialog>
                                     <DialogTrigger asChild>
-                                        <Button className="w-30 font-bold justify-self-end rounded-3xl">
+                                        <Button className="w-37 font-bold justify-self-end rounded-3xl">
                                             {chains.find((c) => c.id === chainId)?.name}
                                             <ChevronDown className="ml-1 w-4 h-4" />
                                         </Button>
                                     </DialogTrigger>
-                                    <DialogContent className="w-80 rounded-4xl gap-4">
+                                    <DialogContent className="w-85 rounded-4xl gap-4">
                                         <DialogHeader className="mt-2 mb-2">
                                             <DialogTitle>
                                                 <Label className="text-2xl font-bold text-gray-500 text-left mb-2">Select a blockchain</Label>
@@ -313,7 +313,7 @@ export default function Home() {
                                             {chains.map((chain) => (
                                                 <React.Fragment key={chain.id}>
                                                     { chain.id === chainId ? (
-                                                        <Button className="w-full opacity-100 pointer-events-none justify-start text-left bg-indigo-600 font-bold rounded-xl text-lg mb-2">{chain.name}<SquareCheckBigIcon className="ml-35 w-6 h-6 text-green-300"/></Button>
+                                                        <Button className="w-full opacity-100 pointer-events-none justify-start text-left bg-indigo-600 font-bold rounded-xl text-lg mb-2">{chain.name}<SquareCheckBigIcon className="w-6 h-6 text-green-300"/></Button>
                                                     ) :
                                                     (
                                                         <Button className="w-full justify-start text-left shadow-none bg-transparent text-black-500 hover:bg-slate-200 font-bold rounded-xl text-lg mb-2" onClick={() => handleSwitchChain(chain.id)}>{chain.name}</Button>
@@ -353,14 +353,14 @@ export default function Home() {
                                 <Label className="font-bold text-xl w-1/2">To</Label>
                                 <Dialog>
                                     <DialogTrigger asChild>
-                                        <Button className="w-30 font-bold justify-self-end rounded-3xl">
+                                        <Button className="w-37 font-bold justify-self-end rounded-3xl">
                                             <React.Fragment>
                                                 {chains.find((c) => (c.id === targetChain))?.name || 'Network'}
                                             </React.Fragment>
                                             <ChevronDown className="ml-1 w-4 h-4" />
                                         </Button>
                                     </DialogTrigger>
-                                    <DialogContent className="w-80 rounded-4xl gap-4">
+                                    <DialogContent className="w-85 rounded-4xl gap-4">
                                         <DialogHeader className="mt-2 mb-2">
                                             <DialogTitle>
                                                 <Label className="text-2xl font-bold text-gray-500 text-left mb-2">Select a target</Label>
@@ -371,7 +371,7 @@ export default function Home() {
                                             {chains.map((chain) => (
                                                 <React.Fragment key={chain.id}>
                                                     { chain.id === targetChain ? (
-                                                        <Button className="w-full opacity-100 pointer-events-none justify-start text-left bg-indigo-600 font-bold rounded-xl text-lg mb-2">{chain.name}<SquareCheckBigIcon className="ml-35 w-6 h-6 text-green-300"/></Button>
+                                                        <Button className="w-full opacity-100 pointer-events-none justify-start text-left bg-indigo-600 font-bold rounded-xl text-lg mb-2">{chain.name}<SquareCheckBigIcon className="w-6 h-6 text-green-300"/></Button>
                                                     ) :
                                                     (
                                                         <Button className="w-full justify-start text-left shadow-none bg-transparent text-black-500 hover:bg-slate-200 font-bold rounded-xl text-lg mb-2" onClick={() => handleSwitchTarget(chain.id)}>{chain.name}</Button>
