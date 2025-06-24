@@ -67,14 +67,24 @@ export default function Home() {
       if (newItems.length > 0) {
         for (let i=0; i < newItems.length; i++){
           // get the tokenURI
-          newItems[i].uri = await readContract(rainbowConfig, {
-            abi: erc721Abi,
+          let uri;
+          try{
+            uri = await readContract(rainbowConfig, {
+            abi: bridgeConfig[chainId].abi.collection[0],
             address: newItems[i].nft,
             functionName: 'tokenURI',
             args: [
               BigInt(newItems[i].tokenId)
             ]
-          })
+          });
+          if (typeof uri == 'string') {
+            newItems[i].uri = uri;
+          } else {
+            newItems[i].uri = ""
+          }
+        } catch (err){
+          newItems[i].uri = ""
+        }
         }
         // if there is newItems then add page and set items
         setItems((prev) => [...prev, ...newItems]);
