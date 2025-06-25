@@ -1,7 +1,7 @@
 # 📘 Smiley's NFT Market
 
 This project is built with Next.js , Hardhat, Solidity.
-Users can mint, buy, and sell the nft. And it supports both sepolia and scroll sepolia testnet. It also supports transfering from one blockchain to anoter which is bridge.
+Users can mint, buy, and sell the nft. And it supports both sepolia and scroll sepolia testnet. It also supports transfering from one blockchain to another which is bridge.
 
 
 ## 🧰 Features
