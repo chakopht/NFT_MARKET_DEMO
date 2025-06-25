@@ -62,6 +62,7 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
   const [priceErr, setPriceErr] = useState<string | null>(null);
   const [listed, setListed] = useState<bigint | null>(null);
   const [loadedMap, setLoadedMap] = useState<Record<number, boolean>>({});
+  const [loadedMap1, setLoadedMap1] = useState<Record<number, boolean>>({});
   const chainId = useChainId();
   // to change the items info independently
 
@@ -339,7 +340,12 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
                   </DialogHeader>
                     <div className="grid items-center w-full gap-5">
                       <div className="relative grid w-full h-50 items-center">
-                        <Image src={item.uri} alt={item.tokenId} fill className="rounded-xl object-cover"/>
+                        <Image src={item.uri} alt={item.tokenId} fill onLoadingComplete={() =>
+                          setLoadedMap1((prev) => ({ ...prev, [item.tokenId]: true }))
+                        }
+                        className={`rounded-xl object-cover object-contain transition-opacity duration-500 ${
+                          loadedMap1[item.tokenId] ? 'opacity-100' : 'opacity-0'
+                        }`}/>
                       </div>
                       <div className="grid grid-rows-1 grid-cols-3 items-center w-170">
                         <Label className="font-bold text-left">

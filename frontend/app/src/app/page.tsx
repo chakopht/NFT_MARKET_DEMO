@@ -111,15 +111,6 @@ export default function Home() {
     }
   };
 
-
-  useEffect(() => {
-    // fetch first page
-    if (onceEffect.current == false) {
-      console.log("first effect");
-      onceEffect.current = true;
-    }
-  }, []);
-
   useEffect(() => {
     // fetch first page
     if (onceEffect.current == false) {
