@@ -59,7 +59,7 @@ Users can mint, buy, and sell the nft. And it supports both sepolia and scroll s
     ```
 
 
-## 🗂️ Porject Structure
+## 🗂️ Project Structure
 ---
 ``` bash
 smiley nft market/
