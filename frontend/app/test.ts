@@ -234,19 +234,19 @@ const set_gateway_recivier = async (client: WalletClient, pubclient: PublicClien
     const receipt = await pubclient.waitForTransactionReceipt({hash: hash});
 }
 
-const set_collection_bridge = async (client: WalletClient, pubclient: PublicClient, addr: `0x${string}`, 
-  bridge_addr: `0x${string}`, abi: any) => {
-    // set bridge addr for collection
+const set_collection_market = async (client: WalletClient, pubclient: PublicClient, addr: `0x${string}`, 
+  market_addr: `0x${string}`, abi: any) => {
+    // set market addr for collection
     const resp = await pubclient.simulateContract({
       account,
       abi: abi,
       address: addr,
-      functionName: 'setBridge',
+      functionName: 'setAddr',
       args: [
-          bridge_addr
+          market_addr
       ],
     })
-    console.log("setBridge: %s", resp.request);
+    console.log("setAddr: %s", resp.request);
     const hash = await client.writeContract(resp.request);
     const receipt = await pubclient.waitForTransactionReceipt({hash: hash});
 }
@@ -272,22 +272,21 @@ const set_approve = async (client: WalletClient, pubclient: PublicClient, tokenI
 const main = async () => {
     // set gateway receiver as bridge address
 
-    await set_gateway_recivier(anvilClient, anvilPubClient, gatewayAddress, bridgeAddress, gateway_abi);
-    await set_gateway_recivier(hardhatClient, hardhatPubClient, hardhatGatewayAddress, hardhatBridgeAddress, gateway_abi);
+    // await set_gateway_recivier(anvilClient, anvilPubClient, gatewayAddress, bridgeAddress, gateway_abi);
+    // await set_gateway_recivier(hardhatClient, hardhatPubClient, hardhatGatewayAddress, hardhatBridgeAddress, gateway_abi);
 
     //set collection bridge
 
-    await set_collection_bridge(anvilClient, anvilPubClient, collectionsAddress, bridgeAddress, collection_c2_abi);
-    await set_collection_bridge(hardhatClient, hardhatPubClient, hardhatCollectionsAddress, hardhatBridgeAddress, collection_abi);
+    // await set_collection_market(hardhatClient, hardhatPubClient, hardhatCollectionsAddress, hardhatMarketplaceAddress, collection_abi);
 
     // mint pack estimate
-    // mint(client.hardhat);
-    // pack(client.hardhat, 1);
+    // await mint(client.hardhat);
+    // await pack(client.hardhat, 1);
     // chain1(BigInt(4), `https://${PINATA}/ipfs/${cid}`);
 
     // test hardhat bridge
     // set_approve(hardhatClient, hardhatPubClient, BigInt(1), collection_abi, hardhatBridgeAddress);
-    // start_bridge_hardhat(BigInt(1));
+    await start_bridge_hardhat(BigInt(1));
 
     // test anvil bridge
     // set_approve(anvilClient, anvilPubClient, BigInt(1), collection_c2_abi, bridgeAddress);

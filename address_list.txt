@@ -23,6 +23,11 @@ scroll:
     Deploying Bridge...
     Bridge deployed to: 0x49DB0f417a4764EeB3909De8160333a0D76aA9fE
 
+sepolia:
+    Bridge: 0x0702E3a19Bc7bceC62Ef1Da6AFD86687411BCc0C
+scroll:
+    Bridge: 0x5990F077E1e0b0bad943Cd7017A4516231B393D2
+
 
 subgraph sepolia
 https://api.studio.thegraph.com/query/109366/smiley-market-sepolia/version/latest

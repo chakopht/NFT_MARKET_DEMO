@@ -30,6 +30,11 @@
       "address": "0x49DB0f417a4764EeB3909De8160333a0D76aA9fE",
       "txHash": "0x11f742289816b63e4e52660e2fd701704ea4e9c19d2bcd921b4882004dcb40e6",
       "kind": "uups"
+    },
+    {
+      "address": "0x5990F077E1e0b0bad943Cd7017A4516231B393D2",
+      "txHash": "0x9e3d7c2220008093d88e19f64282ab83a4cc2cc4231b406752869745ab7161a7",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -918,7 +923,7 @@
             "label": "marketplace",
             "offset": 0,
             "slot": "2",
-            "type": "t_contract(ISMLMarket)9369",
+            "type": "t_contract(ISMLMarket)7613",
             "contract": "SMLBridge",
             "src": "contracts/bridge.sol:27"
           },
@@ -982,7 +987,261 @@
             "label": "contract IAxelarGateway",
             "numberOfBytes": "20"
           },
-          "t_contract(ISMLMarket)9369": {
+          "t_contract(ISMLMarket)7613": {
+            "label": "contract ISMLMarket",
+            "numberOfBytes": "20"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "c8a8d93719c7df5f70f29a0dbf6eb4ce0d387f87a858ce1ef3a4e4f8900d62e4": {
+      "address": "0x8E739ca785cECC5e6363ab5eA0c63684EaeE46dC",
+      "txHash": "0xb096bc96fa83f2755cae02a8e0d59f1017258e5154d329f5eff5edb0365342e5",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "gateway",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(IAxelarGateway)812",
+            "contract": "SMLBridge",
+            "src": "contracts/bridge.sol:25"
+          },
+          {
+            "label": "gasService",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IAxelarGasService)476",
+            "contract": "SMLBridge",
+            "src": "contracts/bridge.sol:26"
+          },
+          {
+            "label": "marketplace",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(ISMLMarket)7613",
+            "contract": "SMLBridge",
+            "src": "contracts/bridge.sol:27"
+          },
+          {
+            "label": "nftContract",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "SMLBridge",
+            "src": "contracts/bridge.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)783_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)723_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_contract(IAxelarGasService)476": {
+            "label": "contract IAxelarGasService",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IAxelarGateway)812": {
+            "label": "contract IAxelarGateway",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ISMLMarket)7613": {
+            "label": "contract ISMLMarket",
+            "numberOfBytes": "20"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "0c6f3163e8bdf1647ee1dd1aaea54dab5e02d0f6892fee0b2ef4d9c723194764": {
+      "address": "0xF9C3b48152013590f392021Bb211f1798A5CC883",
+      "txHash": "0xe61c727324e77af681e6a3fd21fec690c82745ea3b26eceedc42a47049c21ded",
+      "layout": {
+        "solcVersion": "0.8.28",
+        "storage": [
+          {
+            "label": "gateway",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(IAxelarGateway)812",
+            "contract": "SMLBridge",
+            "src": "contracts/bridge.sol:26"
+          },
+          {
+            "label": "gasService",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IAxelarGasService)476",
+            "contract": "SMLBridge",
+            "src": "contracts/bridge.sol:27"
+          },
+          {
+            "label": "marketplace",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(ISMLMarket)7614",
+            "contract": "SMLBridge",
+            "src": "contracts/bridge.sol:28"
+          },
+          {
+            "label": "nftContract",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "SMLBridge",
+            "src": "contracts/bridge.sol:29"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)783_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)723_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_contract(IAxelarGasService)476": {
+            "label": "contract IAxelarGasService",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IAxelarGateway)812": {
+            "label": "contract IAxelarGateway",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ISMLMarket)7614": {
             "label": "contract ISMLMarket",
             "numberOfBytes": "20"
           }

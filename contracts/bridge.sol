@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 
 
@@ -50,7 +51,7 @@ contract SMLBridge is Initializable, UUPSUpgradeable, OwnableUpgradeable {
         string calldata destinationAddress,
         uint256 tokenId,
         uint256 price
-    ) external payable {
+    ) external virtual payable {
         // Transfer NFT to this contract
         IERCSML721 token = IERCSML721(nftContract);
         require(token.getApproved(tokenId) == address(this), "SMLBridge not approved");
@@ -61,23 +62,32 @@ contract SMLBridge is Initializable, UUPSUpgradeable, OwnableUpgradeable {
         // Prepare payload
         bytes memory payload = abi.encode(msg.sender, tokenId, price, uri);
 
-        // Pay gas fee for target chain action
-        gasService.payNativeGasForContractCall{value: msg.value}(
-            address(this),
-            destinationChain,
-            destinationAddress,
-            payload,
-            msg.sender
-        );
-
-        // Send cross-chain message
-        gateway.callContract(destinationChain, destinationAddress, payload);
-
         // Call marketplace function
-        try marketplace.adapterSend(nftContract, tokenId) {} 
-        catch {
+        try marketplace.adapterSend(nftContract, tokenId) {
+            // Pay gas fee for target chain action
+            gasService.payNativeGasForContractCall{value: msg.value}(
+                address(this),
+                destinationChain,
+                destinationAddress,
+                payload,
+                msg.sender
+            );
+
+            // Send cross-chain message
+            gateway.callContract(destinationChain, destinationAddress, payload);
+        } 
+        catch Error(string memory reason) {
+            revert(reason);
+            // require / revert with a string
+        } catch Panic(uint code) {
+            // assert() failures, overflows, div by zero, etc.
+            revert(Strings.toString(code));
+        } catch (bytes memory data) {
+            // catch-all for everything else (including unknown/custom errors)
             emit MarketCallSendFailed(tokenId);
+            revert(string.concat("adapterSend error: ", Strings.toHexString(nftContract), " ", Strings.toString(tokenId)));
         }
+
      
     }
 
@@ -87,7 +97,7 @@ contract SMLBridge is Initializable, UUPSUpgradeable, OwnableUpgradeable {
         string calldata sourceChain,
         string calldata sourceAddress,
         bytes calldata payload
-    ) external {
+    ) external virtual {
         bytes32 payloadHash = keccak256(payload);
         bool tag = gateway.validateContractCall(commandId, sourceChain, sourceAddress, payloadHash);
         if (!tag){
@@ -101,13 +111,9 @@ contract SMLBridge is Initializable, UUPSUpgradeable, OwnableUpgradeable {
         string calldata sourceChain,
         string calldata sourceAddress,
         bytes calldata payload
-    ) internal {
+    ) internal virtual {
         (address recipient, uint256 tokenId, uint256 price, string memory uri) = abi.decode(payload, (address, uint256, uint256, string));
         // Call market receive function
-        try marketplace.adapterRecv(nftContract, tokenId, price, recipient, uri) {} 
-        catch  {
-            console.log("adapterRecv error");
-            emit MarketCallRecvFailed(tokenId);
-        }
+        marketplace.adapterRecv(nftContract, tokenId, price, recipient, uri);
     }
 }

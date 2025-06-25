@@ -61,6 +61,7 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
   const [price, setPrice] = useState<string | null>(null);
   const [priceErr, setPriceErr] = useState<string | null>(null);
   const [listed, setListed] = useState<bigint | null>(null);
+  const [loadedMap, setLoadedMap] = useState<Record<number, boolean>>({});
   const chainId = useChainId();
   // to change the items info independently
 
@@ -315,7 +316,12 @@ export default function ItemGrid({items, reFetchItems, flag = true}: ItemGridPro
                         src={item.uri}
                         alt={item.tokenId}
                         fill
-                        className="rounded-t-xl object-cover"
+                        onLoadingComplete={() =>
+                          setLoadedMap((prev) => ({ ...prev, [item.tokenId]: true }))
+                        }
+                        className={`rounded-t-xl object-cover object-contain transition-opacity duration-500 ${
+                          loadedMap[item.tokenId] ? 'opacity-100' : 'opacity-0'
+                        }`}
                       />
                   </CardHeader>
                   <CardContent className="flex flex-row justify-center items-center gap-4">

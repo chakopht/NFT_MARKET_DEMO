@@ -49,12 +49,52 @@ async function main() {
     console.log("Bridge deployed to:", bridge_proxy_addr);
 
   }
+
+  async function v2_upgrade_main() {
+    const BridgeV2 = await ethers.getContractFactory("SMLBridgeV2");
+        const ImplV2 = await upgrades.upgradeProxy("0x49DB0f417a4764EeB3909De8160333a0D76aA9fE", BridgeV2, {
+            kind: "uups"
+        })
+        console.log("v2 proxy address: ", ImplV2.target);
+   }
   
 // Run the script
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
-  
+// main()
+//   .then(() => process.exit(0))
+//   .catch((error) => {
+//     console.error(error);
+//     process.exit(1);
+//   });
+
+
+// v2_upgrade_main().then(() => process.exit(0))
+// .catch((error) => {
+//   console.error(error);
+//   process.exit(1);
+// });
+
+async function depoly_new_bridge() {
+  const [deployer] = await ethers.getSigners();
+  const gateway_addr = "0xe432150cce91c13a887f7D836923d5597adD8E31";
+  const gas_addr = "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6";
+  const nft_addr = "0xe93D1bcfd27123bD0233FfABfA4BdE4B62a802A8";
+  const market_addr = "0x4D5f022BFd7986B80a76AA1c2A3A2277EC86f909";
+  const Bridge = await ethers.getContractFactory("SMLBridge");
+   // Deploy bridge
+   console.log("Deploying Bridge...");
+   const bridge_proxy =  await upgrades.deployProxy(Bridge, 
+     [deployer.address, gateway_addr, gas_addr, nft_addr, market_addr], {
+     initializer: "init",
+     kind: "uups"
+   })
+   await bridge_proxy.waitForDeployment();
+   const bridge_proxy_addr = await bridge_proxy.getAddress();
+   console.log("Bridge deployed to:", bridge_proxy_addr);
+ }
+
+
+ depoly_new_bridge().then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });

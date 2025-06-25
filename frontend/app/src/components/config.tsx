@@ -1373,6 +1373,22 @@ export const bridgeABI = [
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "length",
+        "type": "uint256"
+      }
+    ],
+    "name": "StringsInsufficientHexLength",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "UUPSUnauthorizedCallContext",
     "type": "error"
@@ -2424,7 +2440,7 @@ export const bridgeConfig: BridgeConfig = {
   11_155_111: { // sepolia
     name: sepolia.name,
     axlar: CHAINS.TESTNET.SEPOLIA,
-    bridge: "0x54604a4205Fe4bf7aAf6B1fC686cbdFE65d645B5",
+    bridge: "0x0702E3a19Bc7bceC62Ef1Da6AFD86687411BCc0C",
     collection: ["0xF9E5C107e71830025801dE1a170257F7202773fe"],
     market: "0xC19A5d2cb7268DC9Df0Ca81CACeE4D9A90F014b2",
     abi: {
@@ -2437,7 +2453,7 @@ export const bridgeConfig: BridgeConfig = {
   534_351: { // scroll sepolia
     name: scrollSepolia.name,
     axlar: CHAINS.TESTNET.SCROLL,
-    bridge: "0x49DB0f417a4764EeB3909De8160333a0D76aA9fE",
+    bridge: "0x5990F077E1e0b0bad943Cd7017A4516231B393D2",
     collection: ["0xe93D1bcfd27123bD0233FfABfA4BdE4B62a802A8"],
     market: "0x4D5f022BFd7986B80a76AA1c2A3A2277EC86f909",
     abi: {
